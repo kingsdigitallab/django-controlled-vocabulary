@@ -1,4 +1,4 @@
-# django-controlled-vocabulary
+# Django Controlled Vocabulary
 Link your data to authority lists or your own controlled lists
 
 # Features
