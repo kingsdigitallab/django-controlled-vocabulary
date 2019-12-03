@@ -11,6 +11,9 @@ Link your data to authority lists or your own controlled lists
   * [TODO] Sparql: TGN
   * [TODO] Rest API
   * CSV
+* Built-in vocabulary plug-ins:
+  * ISO 639-2 (Language codes)
+  * DCMI Type (Dublin Core resource types)
 * **stores** used terms from remote vocabularies:
   * space efficient (don't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
