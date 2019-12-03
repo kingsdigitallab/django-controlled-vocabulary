@@ -19,7 +19,7 @@ Facilitates linkage to remote standard vocabularies (e.g. language codes, geonam
   * space efficient (don't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
 * [TODO] possibility to store additional **metadata** (e.g. geonames coordinates)
-* simple **rest API** to publish terms (could even use that as a remote source, i.e. connect our datasets)
+* simple **rest API** to publish your own terms
 * **autocomplete** input widget for django admin
   * [TODO] vocabulary selector
 
