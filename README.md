@@ -1,16 +1,17 @@
 # Django Controlled Vocabulary
-Link your data to authority lists or your own controlled lists
+
+Facilitates linkage to remote standard vocabularies (e.g. language codes, geonames) within the Django Admin to increase the consistency and understandability of your project data.
 
 # Features
 
-* lets you create your own terms (**local** control lists)
+* Lets you create your own controlled lists of terms (i.e. **local** lists)
 * [TODO] look up terms from **remote** vocabularies (i.e. authority lists)
 * **plug-in architecture** for lookups into particular vocabularies:
-  * Python libraries: Language codes
   * Hard-coded lists: DCMI types
+  * CSV
+  * Python libraries
   * [TODO] Sparql: TGN
   * [TODO] Rest API
-  * CSV
 * Built-in vocabulary plug-ins:
   * ISO 639-2 (Language codes)
   * DCMI Type (Dublin Core resource types)
@@ -18,7 +19,7 @@ Link your data to authority lists or your own controlled lists
   * space efficient (don't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
 * [TODO] possibility to store additional **metadata** (e.g. geonames coordinates)
-* simple **rest API** to publish terms (could even use that as a remote source, i.e. connect our datasets)
+* simple **rest API** to publish your own terms
 * **autocomplete** input widget for django admin
   * [TODO] vocabulary selector
 
