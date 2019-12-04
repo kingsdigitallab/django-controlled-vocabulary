@@ -58,7 +58,11 @@ CONTROLLED_VOCABULARY_VOCABULARIES = [
 ]
 ```
 
-After enabling new vocabularies you'll need to run ./manage.py vocab update to add them to the database (see below).
+After enabling new vocabularies you'll need to run the following django command create or update records in the database for all enabled vocabulary plug-ins.
+
+```
+./manage.py vocab update
+```
 
 ## Usage
 
@@ -77,11 +81,4 @@ from controlled_vocabulary.models import ControlledTermField
 
 Where 'iso639-2' is the prefix of a controlled vocabulary in your database.
 
-## Update the vocabularies from the plug-ins
-
-The following django command will scan all enabled plug-ins and create or update the corresponding vocabulary records in the database.
-
-```
-./manage.py vocab update
-```
 
