@@ -43,3 +43,17 @@ TODO
 
 TODO
 
+## Usage
+
+To define a controlled term in your Django Model, use the following field:
+
+```
+    language_code = ControlledTermField(
+        'iso639-2', 
+        null=True, blank=True
+    )
+```
+
+Where 'iso639-2' is the prefix of a controlled vocabulary in your database.
+
+
