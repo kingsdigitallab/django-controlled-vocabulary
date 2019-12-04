@@ -41,7 +41,24 @@ TODO
 
 ## Configuration
 
-TODO
+### Enabling vocabulary plug-ins
+
+A Vocabulary plug-in / manager is a python class that provide services for a vocabulary: 
+* implement the search() method used to dynamically look up terms in the admin interface
+* supplies metadata for the vocabulary
+
+Add the following code in your settings.py to enable vocabularies based on the import path of their classes.
+
+```
+# List of import paths to vocabularies lookup classes
+# you can overwrite this in your django settings.py
+CONTROLLED_VOCABULARY_VOCABULARIES = [
+    'controlled_vocabulary.vocabularies.iso639_2',
+    'controlled_vocabulary.vocabularies.dcmitype',
+]
+```
+
+After enabling new vocabularies you'll need to run ./manage.py vocab update to add them to the database (see below).
 
 ## Usage
 
@@ -60,4 +77,11 @@ from controlled_vocabulary.models import ControlledTermField
 
 Where 'iso639-2' is the prefix of a controlled vocabulary in your database.
 
+## Update the vocabularies from the plug-ins
+
+The following django command will scan all enabled plug-ins and create or update the corresponding vocabulary records in the database.
+
+```
+./manage.py vocab update
+```
 
