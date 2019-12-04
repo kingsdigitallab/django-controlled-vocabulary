@@ -79,6 +79,8 @@ After enabling new vocabularies you'll need to run the following django command 
 ./manage.py vocab update
 ```
 
+Note that this command only adds or update but never removes vocabularies from the database or changes terms.
+
 ## Usage
 
 To define a controlled term in your Django Model, use the following field:
