@@ -39,6 +39,21 @@ Facilitates linkage to remote standard vocabularies (e.g. language codes, geonam
 
 TODO
 
+Add the app to the INSTALLED_APPS list in your Django settings file:
+
+```
+INSTALLED_APPS = [
+    # other apps
+    'controlled_vocabulary',
+]
+```
+
+Run the migrations:
+
+```
+./manage.py migrate
+```
+
 ## Configuration
 
 ### Enabling vocabulary plug-ins
