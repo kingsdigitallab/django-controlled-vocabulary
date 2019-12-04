@@ -47,9 +47,9 @@ TODO
 
 To define a controlled term in your Django Model, use the following field:
 
-'''
+```
 from controlled_vocabulary.models import ControlledTermField
-'''
+```
 
 ```
     language_code = ControlledTermField(
