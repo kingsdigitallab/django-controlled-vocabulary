@@ -115,31 +115,34 @@ class ControlledTermWidget(AutocompleteSelect):
                     termid=parts[1],
                     label=parts[2]
                 )
-                print(repr(created))
                 ret = term.id
         return ret
 
 
 class ControlledTermField(models.ForeignKey):
-    #     def get_prep_value(self, value):
-    #         if value:
-    #             parts = str(value).split(':')
-    #             if len(parts) == 2:
-    #                 # 10:abc
-    #                 # where 10 is a ControlledVocabulary.id
-    #                 # and abc is a ControlledTerm.termid
-    #                 # We return the ControlledTerm.id
-    #                 term, created = ControlledTerm.objects.get_or_create()(
-    #                     vocabulary_id=parts[0],
-    #                     termid=parts[1]
-    #                 )
-    #                 print(repr(created))
-    #                 value = term.id
-    #         ret = super().to_python(value)
-    #         return ret
-    pass
+    def __init__(self, vocabularies, to='controlled_vocabulary.ControlledTerm', on_delete=models.SET_NULL, related_name='+', *args, **kwargs):
+        '''
+        vocabularies: a list of vocabularies the user can chose terms from.
+            The first entry of the list is the default vocabulary.
+            An entry has one of the following format:
+                prefix, e.g. 'iso639-2'
+                *concept, e.g. '*Language'
+                '', any vocabulary
+            Example: ['iso639-2', '*language', '']
+            'iso639-2' is the default voc on page load, but the user can
+            also change to all vocabularies that have the concept = language,
+            or any other vocabulary.
 
-#     def to_python(self, value):
-#         print(value)
-#         ret = super().to_python(value)
-#         return ret
+            vocabularies='myvoc' is syntactic sugar for ['myvoc']
+        '''
+
+        self.vocabularies = vocabularies
+
+        super().__init__(to, on_delete, related_name, *args, **kwargs)
+
+    def formfield(self, *args, **kwargs):
+        '''We use a different widget than the base class'''
+        from django.contrib import admin
+        kwargs['widget'] = ControlledTermWidget(
+            self.remote_field, admin.site, self.vocabularies)
+        return super().formfield(*args, **kwargs)
