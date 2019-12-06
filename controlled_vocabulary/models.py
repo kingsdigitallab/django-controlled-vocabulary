@@ -43,7 +43,7 @@ class ControlledTerm(models.Model):
     )
     termid = models.CharField(max_length=LENGTH_LABEL)
     label = models.CharField(max_length=LENGTH_LABEL)
-    definition = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     # We store json in this field.
     # Only Postgresql supports JSONField at this time.
@@ -146,3 +146,8 @@ class ControlledTermField(models.ForeignKey):
         kwargs['widget'] = ControlledTermWidget(
             self.remote_field, admin.site, self.vocabularies)
         return super().formfield(*args, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        kwargs['vocabularies'] = self.vocabularies
+        return name, path, args, kwargs

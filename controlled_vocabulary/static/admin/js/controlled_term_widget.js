@@ -1,6 +1,15 @@
 // Adapted from django/contrib/admin/static/admin/js/autocomplete.js
 (function($) {
     'use strict';
+
+    function format_term(term) {
+        var ret = term.text;
+        if (term.description) {
+            ret += ' (' + term.description + ')';
+        }
+        return ret;
+    }
+
     var init = function($element, options) {
         var settings = $.extend({
             ajax: {
@@ -10,7 +19,8 @@
                         page: params.page
                     };
                 }
-            }
+            },
+            templateResult: format_term
         }, options);
         $element.select2(settings);
     };

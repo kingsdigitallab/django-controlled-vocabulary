@@ -1,4 +1,6 @@
 from .base_list import VocabularyBaseList
+import os
+import re
 
 
 class VocabularyBaseCSV(VocabularyBaseList):
@@ -18,22 +20,30 @@ class VocabularyBaseCSV(VocabularyBaseList):
     def _get_term_from_csv_line(self, line):
         return [line[1], line[1]]
 
-    def _get_searchable_terms(self):
-        ret = []
-        import csv
-        import os
-
-        filepath = os.path.join(
+    def _get_filepath(self):
+        ret = os.path.join(
             os.path.dirname(__file__),
             os.path.basename(self.source['url'])
         )
 
+        return ret
+
+    def _get_searchable_terms(self):
+        ret = []
+        import csv
+
+        filepath = self._get_filepath()
+
         if not os.path.exists(filepath):
             raise Exception('{} not found'.format(filepath))
 
+        options = {}
+        if 'delimiter' in self.source:
+            options['delimiter'] = self.source['delimiter']
+
         with open(filepath) as tsv:
             first_line = True
-            for line in csv.reader(tsv, delimiter=self.source['delimiter']):
+            for line in csv.reader(tsv, **options):
                 if not first_line and len(line) > 2:
                     term = self._get_term_from_csv_line(line)
                     if term is not None:
@@ -41,3 +51,21 @@ class VocabularyBaseCSV(VocabularyBaseList):
                 first_line = False
 
         return ret
+
+    def download(self):
+        '''Download self.source'''
+        from .base import fetch
+
+        url = self.source['url']
+        filepath = self._get_filepath()
+        if re.search('^https?://', url):
+            content = fetch(url)
+
+            size = len(content)
+
+            with open(filepath, 'wb') as fh:
+                fh.write(content)
+        else:
+            size = 0
+
+        return [url, filepath, size]

@@ -41,9 +41,13 @@ class TermListView(ListView):
         # search with manager
         ret = []
         for term in voc_manager.search(user_query):
+            description = ''
+            if len(term) > 2:
+                description = term[2]
             term = ControlledTerm(
                 termid=term[0], label=term[1],
-                vocabulary=voc_record
+                vocabulary=voc_record,
+                description=description
             )
             ret.append(term)
 
@@ -61,7 +65,8 @@ class TermListView(ListView):
                         term.label
                     ),
                     'termid': term.termid,
-                    'text': term.label
+                    'text': term.label,
+                    'description': term.description,
                 }
                 for term
                 in page_obj

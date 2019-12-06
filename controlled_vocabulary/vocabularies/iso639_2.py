@@ -5,7 +5,7 @@ class VocabularyISO639_2(VocabularyBaseCSV):
     prefix = 'iso639-2'
     label = 'ISO 639-2'
     base_url = 'http://id.loc.gov/vocabulary/iso639-2/'
-    concept = 'Language'
+    concept = 'wikidata:Q34770:language'
     description = 'Codes for the Representation of Names of Languages'\
         ' - Part 2: Alpha-3 Code for the Names of Languages'
     source = {

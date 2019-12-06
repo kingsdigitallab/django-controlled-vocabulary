@@ -3,10 +3,14 @@ from django.conf import settings
 from importlib import import_module
 
 # List of import paths to vocabularies lookup classes
-# you can overwrite this in your django settings.py
+# you can overwrite this in your Django settings.py
 CONTROLLED_VOCABULARY_VOCABULARIES = [
     'controlled_vocabulary.vocabularies.iso639_2',
     'controlled_vocabulary.vocabularies.dcmitype',
+    'controlled_vocabulary.vocabularies.schema',
+    'controlled_vocabulary.vocabularies.mime',
+    'controlled_vocabulary.vocabularies.fast_topic',
+    'controlled_vocabulary.vocabularies.wikidata',
 ]
 
 

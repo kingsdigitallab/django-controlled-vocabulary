@@ -36,12 +36,19 @@ class VocabularyBaseList(VocabularyBase):
         pattern = pattern.lower()
 
         if pattern:
+            exact_match = None
+            start_match_count = 0
             for term in self._searchable_terms:
                 if pattern in term[1].lower():
-                    if term[1].lower().startswith(pattern):
-                        ret.insert(0, term)
+                    if term[1].lower() == pattern:
+                        exact_match = term
+                    elif term[1].lower().startswith(pattern):
+                        ret.insert(start_match_count, term)
+                        start_match_count += 1
                     else:
                         ret.append(term)
+            if exact_match:
+                ret.insert(0, exact_match)
         else:
             ret = self._searchable_terms
 
