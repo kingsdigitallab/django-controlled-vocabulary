@@ -27,6 +27,8 @@ class ControlledVocabularyConfig(AppConfig):
         return app.vocabulary_managers.get(prefix, None)
 
     def write_vocabulary_records_from_managers(self):
+        from .models import ControlledTerm
+
         ControlledVocabulary = self._get_vocabulary_model()
         for manager in self.vocabulary_managers.values():
             rec = {
@@ -34,7 +36,9 @@ class ControlledVocabularyConfig(AppConfig):
                 'label': manager.label,
                 'base_url': manager.base_url,
                 'description': manager.description,
-                'concept': manager.concept,
+                'concept': ControlledTerm.get_or_create_from_code(
+                    manager.concept
+                ),
             }
 
             ControlledVocabulary.objects.update_or_create(

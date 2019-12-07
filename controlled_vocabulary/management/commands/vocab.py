@@ -9,9 +9,16 @@ Usage: vocab ACTION OPTIONS
 ACTION:
 
   update
-    update vocabulary metadata from the plugins / managers into the database
+    update vocabulary metadata in the database from the plugins / managers
   managers
     lists the plugins / managers
+  download
+    download the remote data source for each plugin / manager
+    a data source can be a CSV, RDF, ...
+    note: some managers don't need source files
+    note: does nothing if the file already exists
+  redownload
+    same as download but always download the source data even if already on disk
 
 OPTIONS:
 
@@ -63,21 +70,22 @@ OPTIONS:
             ))
 
     def action_update(self):
-        vocs = self.app.write_vocabulary_records_from_managers()
-
-        for voc in vocs.values():
+        for voc in self._get_vocabularies():
             self.stdout.write(voc.__module__)
 
-    def action_download(self):
-        vocs = self.app.vocabulary_managers
+    def action_redownload(self):
+        self.action_download(True)
 
-        for voc in vocs.values():
+    def action_download(self, overwrite=False):
+        for voc in self._get_vocabularies():
             download_method = getattr(voc, 'download', None)
             if download_method:
                 self.stdout.write(voc.prefix)
-                url, filepath, size = download_method()
+                url, filepath, size, downloaded = download_method(
+                    overwrite=overwrite
+                )
                 self.stdout.write(
-                    '{}\t{}\t{:.3f}MB'.format(
+                    '\t{}\n\t{}\n\t{:.3f}MB'.format(
                         url,
                         filepath,
                         size / 1024 / 1024

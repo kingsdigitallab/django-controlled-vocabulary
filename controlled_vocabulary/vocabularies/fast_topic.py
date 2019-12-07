@@ -8,7 +8,7 @@ class VocabularyFastTopic(VocabularyBaseCSV):
     prefix = 'fast-topic'
     label = 'FAST Topic'
     base_url = 'http://id.worldcat.org/fast/{identifier}/{format}'
-    concept = 'wikidata:P921:Topic'
+    concept = 'wikidata:P921:topic'
     description = 'Topic list from the Faceted Application of Subject Terminology'
     # also downloadable but 600MB+ for RDF file.
     source = {

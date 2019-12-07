@@ -52,20 +52,25 @@ class VocabularyBaseCSV(VocabularyBaseList):
 
         return ret
 
-    def download(self):
+    def download(self, overwrite=False):
         '''Download self.source'''
         from .base import fetch
 
         url = self.source['url']
         filepath = self._get_filepath()
+        size = 0
+        downloaded = 0
+
         if re.search('^https?://', url):
-            content = fetch(url)
+            if overwrite or not os.path.exists(filepath):
+                content = fetch(url)
 
-            size = len(content)
+                size = len(content)
+                downloaded = 1
 
-            with open(filepath, 'wb') as fh:
-                fh.write(content)
-        else:
-            size = 0
+                with open(filepath, 'wb') as fh:
+                    fh.write(content)
+            else:
+                size = os.path.getsize(filepath)
 
-        return [url, filepath, size]
+        return [url, filepath, size, downloaded]

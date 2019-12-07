@@ -9,36 +9,9 @@ LENGTH_IDENTIFIER = 50
 LOCAL_VOCABULARY_BASE_URL = 'http://localhost:8000/vocabularies'
 
 
-class ControlledVocabulary(models.Model):
-    prefix = models.CharField(max_length=LENGTH_IDENTIFIER, unique=True)
-    label = models.CharField(max_length=LENGTH_LABEL, unique=True)
-    # TODO: rename namespace?
-    base_url = models.URLField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    concept = models.CharField(
-        max_length=LENGTH_IDENTIFIER, null=False, blank=True, default='')
-
-    class Meta:
-        ordering = ['prefix']
-        verbose_name_plural = 'Controlled vocabularies'
-
-    def get_absolute_url(self):
-        ret = (self.base_url or '').strip()
-
-        if not ret:
-            # local web path for local vocabulary
-            ret = LOCAL_VOCABULARY_BASE_URL.rstrip('/')
-            ret = '{}/{}'.format(ret, self.prefix)
-
-        return ret
-
-    def __str__(self):
-        return self.label
-
-
 class ControlledTerm(models.Model):
     vocabulary = models.ForeignKey(
-        ControlledVocabulary,
+        'ControlledVocabulary',
         on_delete=models.CASCADE
     )
     termid = models.CharField(max_length=LENGTH_LABEL)
@@ -62,6 +35,25 @@ class ControlledTerm(models.Model):
 
     def get_absolute_id(self):
         return '{}:{}'.format(self.vocabulary.prefix, self.termid)
+
+    @classmethod
+    def get_or_create_from_code(cls, code):
+        '''code has the following format: prefix:termid:label
+        '''
+        ret = None
+
+        parts = code.split(':')
+        if len(parts) == 3:
+            voc, _ = ControlledVocabulary.objects.get_or_create(
+                prefix=parts[0].lower().strip()
+            )
+            ret, _ = cls.objects.get_or_create(
+                vocabulary=voc,
+                termid=parts[1].lower().strip(),
+                defaults={'label': parts[2]}
+            )
+
+        return ret
 
     def __str__(self):
         return '{} ({})'.format(self.label, self.vocabulary.prefix)
@@ -151,3 +143,29 @@ class ControlledTermField(models.ForeignKey):
         name, path, args, kwargs = super().deconstruct()
         kwargs['vocabularies'] = self.vocabularies
         return name, path, args, kwargs
+
+
+class ControlledVocabulary(models.Model):
+    prefix = models.CharField(max_length=LENGTH_IDENTIFIER, unique=True)
+    label = models.CharField(max_length=LENGTH_LABEL, unique=True)
+    # TODO: rename namespace?
+    base_url = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    concept = ControlledTermField('wikidata', null=True, blank=True)
+
+    class Meta:
+        ordering = ['prefix']
+        verbose_name_plural = 'Controlled vocabularies'
+
+    def get_absolute_url(self):
+        ret = (self.base_url or '').strip()
+
+        if not ret:
+            # local web path for local vocabulary
+            ret = LOCAL_VOCABULARY_BASE_URL.rstrip('/')
+            ret = '{}/{}'.format(ret, self.prefix)
+
+        return ret
+
+    def __str__(self):
+        return self.label
