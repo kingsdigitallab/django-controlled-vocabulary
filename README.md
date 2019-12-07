@@ -2,6 +2,8 @@
 
 Facilitates linkage to remote standard vocabularies (e.g. language codes, geonames) within the Django Admin to increase the consistency and understandability of your project data.
 
+Development Status: Alpha (only partly functional, work in progress)
+
 # Features
 
 * Lets you create your own controlled lists of terms (i.e. **local** lists)
@@ -37,7 +39,11 @@ Facilitates linkage to remote standard vocabularies (e.g. language codes, geonam
 
 ## Installation
 
-TODO
+Install into your environment:
+
+```
+pip install django-controlled-vocabulary
+```
 
 Add the app to the INSTALLED_APPS list in your Django settings file:
 
@@ -58,7 +64,7 @@ Run the migrations:
 
 ### Enabling vocabulary plug-ins
 
-A Vocabulary plug-in / manager is a python class that provide services for a vocabulary: 
+A Vocabulary plug-in / manager is a python class that provide services for a vocabulary:
 * implement the search() method used to dynamically look up terms in the admin interface
 * supplies metadata for the vocabulary
 
@@ -79,6 +85,12 @@ After enabling new vocabularies you'll need to run the following django command 
 ./manage.py vocab update
 ```
 
+And this command to download the data files for the built-in vocabularies.
+
+```
+./manage.py vocab download
+```
+
 Note that this command only adds or update but never removes vocabularies from the database or changes terms.
 
 ## Usage
@@ -91,7 +103,7 @@ from controlled_vocabulary.models import ControlledTermField
 
 ```
     language_code = ControlledTermField(
-        'iso639-2', 
+        'iso639-2',
         null=True, blank=True
     )
 ```

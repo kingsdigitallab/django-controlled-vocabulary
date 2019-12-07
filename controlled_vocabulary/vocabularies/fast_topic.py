@@ -13,7 +13,8 @@ class VocabularyFastTopic(VocabularyBaseCSV):
     # also downloadable but 600MB+ for RDF file.
     source = {
         # 'url': 'http://fast.oclc.org/searchfast/fastsuggest?query={query}&fl=suggest50&rows=10',
-        'url': '',
+        # https://www.oclc.org/research/themes/data-science/fast/download.html
+        'url': 'https://researchworks.oclc.org/researchdata/fast/FASTTopical.nt.zip',
     }
 
     def search(self, pattern):
