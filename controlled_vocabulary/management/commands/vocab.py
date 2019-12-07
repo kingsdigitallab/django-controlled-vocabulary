@@ -9,16 +9,18 @@ Usage: vocab ACTION OPTIONS
 ACTION:
 
   update
-    update vocabulary metadata in the database from the plugins / managers
+    update vocabulary records from the enabled plugins / managers
   managers
     lists the plugins / managers
-  download
+  fetch
     download the remote data source for each plugin / manager
     a data source can be a CSV, RDF, ...
     note: some managers don't need source files
     note: does nothing if the file already exists
-  redownload
+  refetch
     same as download but always download the source data even if already on disk
+  init
+    same as 'update' followed by 'fetch'
 
 OPTIONS:
 
@@ -73,10 +75,10 @@ OPTIONS:
         for voc in self._get_vocabularies():
             self.stdout.write(voc.__module__)
 
-    def action_redownload(self):
-        self.action_download(True)
+    def action_refetch(self):
+        self.action_fetch(True)
 
-    def action_download(self, overwrite=False):
+    def action_fetch(self, overwrite=False):
         for voc in self._get_vocabularies():
             download_method = getattr(voc, 'download', None)
             if download_method:
@@ -91,6 +93,10 @@ OPTIONS:
                         size / 1024 / 1024
                     )
                 )
+
+    def action_init(self):
+        self.action_update()
+        self.action_fetch()
 
     def _get_vocabularies(self):
         '''Returns a list of Vocabulary plugin objects.
