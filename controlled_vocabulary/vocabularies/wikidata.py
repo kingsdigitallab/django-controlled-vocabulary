@@ -27,6 +27,4 @@ class VocabularyWikidata(VocabularyBase):
         for hit in res['search']:
             ret.append([hit['id'], hit['label'], hit.get('description', '')])
 
-        print(len(ret))
-
         return ret

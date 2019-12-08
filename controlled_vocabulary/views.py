@@ -39,6 +39,9 @@ class TermListView(ListView):
             )
 
         # search with manager
+        # TODO: use a generator,
+        # wasteful to convert all entries to ControlledTerm()
+        # if only few displayed
         ret = []
         for term in voc_manager.search(user_query):
             description = ''

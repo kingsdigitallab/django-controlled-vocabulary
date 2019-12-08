@@ -3,7 +3,7 @@
 Facilitates linkage to remote standard vocabularies (e.g. language codes, wikidata)
 within the Django Admin to increase the consistency and understandability of your project data.
 
-Development Status: Alpha (only partly functional, work in progress)
+Development Status: **Alpha** (only partly functional, work in progress)
 
 # Features
 
@@ -15,9 +15,7 @@ Development Status: Alpha (only partly functional, work in progress)
   * Python libraries
   * [TODO] Sparql: TGN
   * [TODO] Rest API
-* Built-in vocabulary plug-ins:
-  * ISO 639-2 (Language codes)
-  * DCMI Type (Dublin Core resource types)
+* Built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
 * **stores** used terms from remote vocabularies:
   * space efficient (don't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
@@ -129,7 +127,7 @@ from controlled_vocabulary.models import ControlledTermField
 
 Where 'iso639-2' is the prefix of a controlled vocabulary in your database.
 
-# vocab, the command line tool
+# vocab (command line tool)
 
 vocab is a django command line tool that lets you manipulate the vocabularies
 and the plugins. To find out more use the help:

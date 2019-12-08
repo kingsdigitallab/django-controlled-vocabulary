@@ -98,6 +98,12 @@ OPTIONS:
         self.action_update()
         self.action_fetch()
 
+    def action_transform(self):
+        for voc in self._get_vocabularies():
+            transform = getattr(voc, 'transform_download', None)
+            if transform:
+                transform()
+
     def _get_vocabularies(self):
         '''Returns a list of Vocabulary plugin objects.
         All of them by default.

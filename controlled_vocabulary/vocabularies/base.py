@@ -14,3 +14,10 @@ def fetch(url):
     http = urllib3.PoolManager(headers=headers)
     request = http.request('GET', url)
     return request.data
+
+
+def chrono(msg):
+    from datetime import datetime
+    now = datetime.now()
+    now_str = now.strftime("%d-%b-%Y (%H:%M:%S.%f)")
+    print(now_str, msg)

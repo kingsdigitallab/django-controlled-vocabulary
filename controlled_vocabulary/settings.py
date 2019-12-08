@@ -12,6 +12,7 @@ CONTROLLED_VOCABULARY_VOCABULARIES = [
     'controlled_vocabulary.vocabularies.wikidata',
 ]
 
+# The absolute path to the folder where vocabulary files will be downloaded
 CONTROLLED_VOCABULARY_DATA_ROOT = os.path.join(
     settings.MEDIA_ROOT, 'vocabularies'
 )
