@@ -8,21 +8,16 @@ Development Status: **Alpha** (only partly functional, work in progress)
 # Features
 
 * Lets you create your own controlled lists of terms (i.e. **local** lists)
-* [TODO] look up terms from **remote** vocabularies (i.e. authority lists)
-* **plug-in architecture** for lookups into particular vocabularies:
-  * Hard-coded lists: DCMI types
-  * CSV
-  * Python libraries
-  * [TODO] Sparql: TGN
-  * [TODO] Rest API
+* look up terms from **remote** vocabularies (i.e. authority lists)
+* **plug-in architecture** for lookups into particular vocabularies
 * Built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
-* **stores** used terms from remote vocabularies:
+* **stores** used terms from remote vocabularies into the database:
   * space efficient (don't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
-* simple **rest API** to publish your own terms
-* **autocomplete** input widget for django admin
-  * [TODO] vocabulary selector
+* [TODO] simple **rest API** to publish your own terms
+* New Django model field with **autocomplete** widget
+* [TODO] widget supports different vocabulary
 
 # Data Model & Software Design
 
