@@ -20,9 +20,14 @@ class VocabularyBaseCSV(VocabularyBaseList):
     def _get_term_from_csv_line(self, line):
         return [line[1], line[1]]
 
+    def _get_data_root(self):
+        from .. import settings as voc_settings
+        ret = voc_settings.get_var('DATA_ROOT')
+        return ret
+
     def _get_filepath(self):
         ret = os.path.join(
-            os.path.dirname(__file__),
+            self._get_data_root(),
             os.path.basename(self.source['url'])
         )
 

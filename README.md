@@ -106,7 +106,6 @@ Add the following code in your settings.py to enable specific vocabularies based
 
 ```
 # List of import paths to vocabularies lookup classes
-# you can overwrite this in your django settings.py
 CONTROLLED_VOCABULARY_VOCABULARIES = [
     'controlled_vocabulary.vocabularies.iso639_2',
     'controlled_vocabulary.vocabularies.dcmitype',

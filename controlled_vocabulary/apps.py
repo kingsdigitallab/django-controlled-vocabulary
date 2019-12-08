@@ -1,23 +1,17 @@
 from django.apps import AppConfig
-from django.conf import settings
 from importlib import import_module
-
-# List of import paths to vocabularies lookup classes
-# you can overwrite this in your Django settings.py
-CONTROLLED_VOCABULARY_VOCABULARIES = [
-    'controlled_vocabulary.vocabularies.iso639_2',
-    'controlled_vocabulary.vocabularies.dcmitype',
-    'controlled_vocabulary.vocabularies.schema',
-    'controlled_vocabulary.vocabularies.mime',
-    'controlled_vocabulary.vocabularies.fast_topic',
-    'controlled_vocabulary.vocabularies.wikidata',
-]
+from .settings import get_var
 
 
 class ControlledVocabularyConfig(AppConfig):
     name = 'controlled_vocabulary'
 
     def ready(self):
+        root = get_var('DATA_ROOT')
+        import os
+        if not os.path.exists(root):
+            os.mkdir(root)
+
         self._load_vocabulary_managers()
 
     @classmethod
@@ -60,13 +54,7 @@ class ControlledVocabularyConfig(AppConfig):
         if ControlledVocabulary is None:
             return
 
-        vocabularies_settings_name = 'CONTROLLED_VOCABULARY_VOCABULARIES'
-
-        module_paths = getattr(
-            settings,
-            vocabularies_settings_name,
-            CONTROLLED_VOCABULARY_VOCABULARIES
-        )
+        module_paths = get_var('VOCABULARIES')
 
         from .vocabularies.base import VocabularyBase as voc_base
         import inspect
@@ -79,7 +67,7 @@ class ControlledVocabularyConfig(AppConfig):
                 raise(ImportError(
                     '{} not found (referenced from {} in your settings)'. format(
                         path,
-                        vocabularies_settings_name
+                        'CONTROLLED_VOCABULARY_VOCABULARIES'
                     ))
                 )
 
