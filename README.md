@@ -30,14 +30,14 @@ Development Status: **Alpha** (only partly functional, work in progress)
 | ------------- | ------------- |
 | <img src="docs/img/controlled-vocabulary-list.png" width="400" />  | <img src="docs/img/controlled-term-list.png" width="400" />  |
 
-* ControlledVocabulary
+* **ControlledVocabulary**
   * prefix: the vocabulary standard prefix, see http://prefix.cc/wikidata
   * label: the short name of the vocabulary
   * base_url: the url used as a base for all terms in the vocabulary
   * concept: the type of terms this vocabulary contains
   * description: a longer description
 
-* ControlledTerm
+* **ControlledTerm**
   * termid: a unique code for the term within a vocabulary
   * label: standard name for the term
   * vocabulary: the vocabulary this term belongs to
@@ -119,9 +119,12 @@ To define a field with an autocomplete to controlled terms in your Django Model,
 
 ```
 from controlled_vocabulary.models import ControlledTermField
-```
 
-```
+...
+
+class MyModel(models.Model):
+
+    ...
     language_code = ControlledTermField(
         'iso639-2',
         null=True, blank=True
