@@ -2,7 +2,7 @@
 
 # Django Controlled Vocabulary
 
-This app provides models and admin interface to link your data with standard vocabularies (e.g. ISO language codes, Wikidata). Benefits: increases the consistency and understandability of your project data.
+This app provides models and admin interface to link your data to standard vocabularies (e.g. ISO language codes, Wikidata). Benefits: increases the consistency and understandability of your project data.
 
 Development Status: **Alpha** (mostly functional, work in progress)
 
