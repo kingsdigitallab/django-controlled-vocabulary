@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/django-controlled-vocabulary.svg)](https://badge.fury.io/py/django-controlled-vocabulary)
+
 # Django Controlled Vocabulary
 
 Facilitates linkage to remote standard vocabularies (e.g. language codes, wikidata)
