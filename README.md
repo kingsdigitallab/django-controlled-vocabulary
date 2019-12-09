@@ -8,7 +8,7 @@ Development Status: **Alpha** (only partly functional, work in progress)
 
 <img src="docs/img/controlled-term-widget.png" />
 
-_An ControlledTerm field in the Django admin interface. The user selects the vocabulary (here: Wikidata), then starts typing a term in the text box. Suggestions are brought from Wikidata. When the user saves the changes, information about the selected term is copied into the database (url, identifier, label)._
+_A ControlledTerm field in the Django admin interface. The user selects the vocabulary (here: Wikidata), then starts typing a term in the text box. Suggestions are brought from Wikidata. When the user saves the changes, information about the selected term is copied into the database (url, identifier, label)._
 
 # Features
 
