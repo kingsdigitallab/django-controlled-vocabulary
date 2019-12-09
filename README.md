@@ -2,36 +2,44 @@
 
 # Django Controlled Vocabulary
 
-Facilitates linkage to remote standard vocabularies (e.g. language codes, wikidata)
-within the Django Admin to increase the consistency and understandability of your project data.
+This app provides models and admin interface to link your data to standard vocabularies (e.g. ISO language codes, Wikidata). Benefits: increases the consistency and understandability of your project data.
 
-Development Status: **Alpha** (only partly functional, work in progress)
+Development Status: **Alpha** (mostly functional, work in progress)
+
+<img src="docs/img/controlled-term-widget.png" />
+
+_A ControlledTerm field in the Django admin interface. The user selects the vocabulary (here: Wikidata), then starts typing a term in the text box. Suggestions are brought from Wikidata. When the user saves the changes, information about the selected term is copied into the database (url, identifier, label)._
 
 # Features
 
-* Lets you create your own controlled lists of terms (i.e. **local** lists)
-* look up terms from **remote** vocabularies (i.e. authority lists)
-* **plug-in architecture** for lookups into particular vocabularies
-* Built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
-* **stores** used terms from remote vocabularies into the database:
-  * space efficient (don't clutter the database with unused terms)
+* create your own controlled lists of terms (i.e. **local** lists)
+* look up terms from **remote** vocabularies (i.e. authority files)
+* extensible **plug-in architecture** for lookups into particular vocabularies:
+  * built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
+* **stores** used terms from remote vocabularies into your database:
+  * space efficient (doesn't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
+* **autocomplete** widget for Django admin; reusable ControlledTermField for your models
+* **command line tool** to download vocabulary files from authoritative sources
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
-* New Django model field with **autocomplete** widget
 
 # Data Model & Software Design
 
 ## Django models
 
-* ControlledVocabulary
+| Vocabularies | Terms |
+| ------------- | ------------- |
+| <img src="docs/img/controlled-vocabulary-list.png" width="400" />  | <img src="docs/img/controlled-term-list.png" width="400" />  |
+
+* **ControlledVocabulary**
   * prefix: the vocabulary standard prefix, see http://prefix.cc/wikidata
   * label: the short name of the vocabulary
   * base_url: the url used as a base for all terms in the vocabulary
   * concept: the type of terms this vocabulary contains
   * description: a longer description
 
-* ControlledTerm
+* **ControlledTerm**
   * termid: a unique code for the term within a vocabulary
   * label: standard name for the term
   * vocabulary: the vocabulary this term belongs to
@@ -50,7 +58,8 @@ demand from a file on disk or in a third-party server. This approach saves
 database space and keeps your application data self-contained.
 
 This project comes with built-in plugins for the following vocabularies:
-ISO 639-2, DCMI Type, Wikidata, FAST Topics, MIME, Schema.org
+
+**ISO 639-2, DCMI Type, Wikidata, FAST Topics, MIME, Schema.org**
 
 Those plugins are **enabled** by default; see below how to selectively enable them.
 
@@ -112,9 +121,12 @@ To define a field with an autocomplete to controlled terms in your Django Model,
 
 ```
 from controlled_vocabulary.models import ControlledTermField
-```
 
-```
+...
+
+class MyModel(models.Model):
+
+    ...
     language_code = ControlledTermField(
         'iso639-2',
         null=True, blank=True
