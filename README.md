@@ -4,7 +4,7 @@
 
 This app provides models and admin interface to link your data with standard vocabularies (e.g. ISO language codes, Wikidata). Benefits: increases the consistency and understandability of your project data.
 
-Development Status: **Alpha** (only partly functional, work in progress)
+Development Status: **Alpha** (mostly functional, work in progress)
 
 <img src="docs/img/controlled-term-widget.png" />
 
