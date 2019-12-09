@@ -65,11 +65,11 @@ class ControlledTermWidget(AutocompleteSelect):
     url_name = 'controlled_terms'
     template_name = 'controlled_vocabulary/controlled_term.html'
 
-    def __init__(self, rel, admin_site, prefix, attrs=None, choices=(), using=None):
-        self.prefix = prefix
-        if attrs is None:
-            attrs = {}
-        attrs['data-voc-prefix'] = self.prefix
+    def __init__(self, rel, admin_site, vocabularies, attrs=None, choices=(), using=None):
+        if isinstance(vocabularies, str):
+            self.vocabularies = [vocabularies, '']
+        else:
+            self.vocabularies = vocabularies
         super().__init__(rel, admin_site, attrs=attrs, choices=choices, using=using)
 
     def get_url(self):
@@ -77,9 +77,37 @@ class ControlledTermWidget(AutocompleteSelect):
         return reverse(self.url_name)
 
     def get_context(self, name, value, attrs):
+        from django.db.models import Q
+
         context = super().get_context(name, value, attrs)
-        context['vocs'] = ControlledVocabulary.objects.all()
-        context['prefix'] = self.prefix
+
+        context['vocabularies'] = ControlledVocabulary.objects.all()
+
+        if '' not in self.vocabularies:
+            # filter vocabularies based on their prefix or concept
+            # e,g, ['iso-639-2', 'concept.wikidata:Q35120']
+            context['vocabularies'] = context['vocabularies'].filter(
+                Q(prefix__in=[
+                    voc
+                    for voc in self.vocabularies
+                    if 'concept.' not in voc
+                ]) | Q(concept__termid__in=[
+                    voc.split(':')[-1]
+                    for voc in self.vocabularies
+                    if 'concept.' in voc
+                ])
+            )
+
+        default_voc = context['vocabularies'][0]
+        for voc in context['vocabularies']:
+            if voc.prefix == self.vocabularies[0]:
+                default_voc = voc
+                break
+
+        prefix = default_voc.prefix
+        context['default_prefix'] = prefix
+        context['widget']['attrs']['data-voc-prefix'] = prefix
+
         return context
 
     @property
@@ -125,10 +153,10 @@ class ControlledTermField(models.ForeignKey):
         vocabularies: a list of vocabularies the user can chose terms from.
             The first entry of the list is the default vocabulary.
             An entry has one of the following format:
-                prefix, e.g. 'iso639-2'
-                *concept, e.g. '*Language'
-                '', any vocabulary
-            Example: ['iso639-2', '*language', '']
+                'iso639-2': a vocabulary prefix
+                'concept.Language': vocabulary concept
+                '': any vocabulary
+            Example: ['iso639-2', 'concept.language', '']
             'iso639-2' is the default voc on page load, but the user can
             also change to all vocabularies that have the concept = language,
             or any other vocabulary.
@@ -156,7 +184,6 @@ class ControlledTermField(models.ForeignKey):
 class ControlledVocabulary(models.Model):
     prefix = models.CharField(max_length=LENGTH_IDENTIFIER, unique=True)
     label = models.CharField(max_length=LENGTH_LABEL, unique=True)
-    # TODO: rename namespace?
     base_url = models.URLField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     concept = ControlledTermField('wikidata', null=True, blank=True)

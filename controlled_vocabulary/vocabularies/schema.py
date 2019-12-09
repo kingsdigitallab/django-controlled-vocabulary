@@ -8,7 +8,7 @@ def decamel(keyword):
 
 class VocabularySchema(VocabularyBaseCSV):
     prefix = 'schema'
-    label = 'schema.org'
+    label = 'Schema.org'
     base_url = 'http://schema.org/'
     concept = 'wikidata:Q35120:entity'
     description = 'web page topics indexable by web search engines'
