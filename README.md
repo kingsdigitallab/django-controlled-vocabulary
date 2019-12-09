@@ -2,8 +2,7 @@
 
 # Django Controlled Vocabulary
 
-Facilitates linkage to remote standard vocabularies (e.g. language codes, wikidata)
-within the Django Admin to increase the consistency and understandability of your project data.
+This app provides models and admin interface to link your data with standard vocabularies (e.g. ISO language codes, Wikidata). Benefits: increases the consistency and understandability of your project data.
 
 Development Status: **Alpha** (only partly functional, work in progress)
 
@@ -11,16 +10,16 @@ Development Status: **Alpha** (only partly functional, work in progress)
 
 # Features
 
-* Lets you create your own controlled lists of terms (i.e. **local** lists)
-* look up terms from **remote** vocabularies (i.e. authority lists)
+* create your own controlled lists of terms (i.e. **local** lists)
+* look up terms from **remote** vocabularies (i.e. authority files)
 * **plug-in architecture** for lookups into particular vocabularies
-* Built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
-* **stores** used terms from remote vocabularies into the database:
-  * space efficient (don't clutter the database with unused terms)
+* built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
+* **stores** used terms from remote vocabularies into your database:
+  * space efficient (doesn't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
+* reusable **autocomplete** widget in the Django admin
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
-* New Django model field with **autocomplete** widget
 
 # Data Model & Software Design
 
@@ -56,6 +55,7 @@ demand from a file on disk or in a third-party server. This approach saves
 database space and keeps your application data self-contained.
 
 This project comes with built-in plugins for the following vocabularies:
+
 ISO 639-2, DCMI Type, Wikidata, FAST Topics, MIME, Schema.org
 
 Those plugins are **enabled** by default; see below how to selectively enable them.
