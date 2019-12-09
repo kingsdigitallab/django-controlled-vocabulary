@@ -7,6 +7,8 @@ within the Django Admin to increase the consistency and understandability of you
 
 Development Status: **Alpha** (only partly functional, work in progress)
 
+<img src="docs/img/controlled-term-widget.png" />
+
 # Features
 
 * Lets you create your own controlled lists of terms (i.e. **local** lists)
@@ -23,6 +25,10 @@ Development Status: **Alpha** (only partly functional, work in progress)
 # Data Model & Software Design
 
 ## Django models
+
+| Vocabularies | Terms |
+| ------------- | ------------- |
+| <img src="docs/img/controlled-vocabulary-list.png" width="400" />  | <img src="docs/img/controlled-term-list.png" width="400" />  |
 
 * ControlledVocabulary
   * prefix: the vocabulary standard prefix, see http://prefix.cc/wikidata
