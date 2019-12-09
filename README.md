@@ -20,7 +20,7 @@ _An ControlledTerm field in the Django admin interface. The user selects the voc
   * space efficient (doesn't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
 * **autocomplete** widget for Django admin; reusable ControlledTermField for your models
-* **command line tool** to download vocabularies from authoritative sources
+* **command line tool** to download vocabulary files from authoritative sources
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
 
