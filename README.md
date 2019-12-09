@@ -18,6 +18,7 @@ Development Status: **Alpha** (only partly functional, work in progress)
   * space efficient (doesn't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
 * reusable **autocomplete** widget in the Django admin
+* command line tool to download vocabularies from authoritative sources
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
 
