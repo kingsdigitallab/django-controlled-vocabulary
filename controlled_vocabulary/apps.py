@@ -5,6 +5,7 @@ from .settings import get_var
 
 class ControlledVocabularyConfig(AppConfig):
     name = 'controlled_vocabulary'
+    verbose_name = 'Controlled Vocabulary'
 
     def ready(self):
         root = get_var('DATA_ROOT')

@@ -72,7 +72,8 @@ OPTIONS:
             ))
 
     def action_update(self):
-        for voc in self._get_vocabularies():
+        vocs = self.app.write_vocabulary_records_from_managers()
+        for voc in vocs.values():
             self.stdout.write(voc.__module__)
 
     def action_refetch(self):

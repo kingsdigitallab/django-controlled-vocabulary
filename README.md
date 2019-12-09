@@ -17,7 +17,6 @@ Development Status: **Alpha** (only partly functional, work in progress)
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
 * New Django model field with **autocomplete** widget
-* [TODO] widget supports different vocabulary
 
 # Data Model & Software Design
 

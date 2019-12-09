@@ -25,6 +25,7 @@ class ControlledTerm(models.Model):
     class Meta:
         ordering = ['termid']
         unique_together = ['vocabulary', 'termid']
+        verbose_name = 'Controlled Term'
 
     def get_absolute_url(self):
         ret = self.vocabulary.get_absolute_url()
@@ -49,7 +50,7 @@ class ControlledTerm(models.Model):
             )
             ret, _ = cls.objects.get_or_create(
                 vocabulary=voc,
-                termid=parts[1].lower().strip(),
+                termid=parts[1].strip(),
                 defaults={'label': parts[2]}
             )
 
@@ -162,7 +163,8 @@ class ControlledVocabulary(models.Model):
 
     class Meta:
         ordering = ['prefix']
-        verbose_name_plural = 'Controlled vocabularies'
+        verbose_name = 'Controlled Vocabulary'
+        verbose_name_plural = 'Controlled Vocabularies'
 
     def get_absolute_url(self):
         ret = (self.base_url or '').strip()
