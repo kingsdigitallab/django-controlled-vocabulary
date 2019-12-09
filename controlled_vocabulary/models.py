@@ -61,7 +61,8 @@ class ControlledTerm(models.Model):
 
 class ControlledTermWidget(AutocompleteSelect):
 
-    url_name = 'controlled_vocabulary_terms'
+    url_name = 'controlled_terms'
+    template_name = 'controlled_vocabulary/controlled_term.html'
 
     def __init__(self, rel, admin_site, prefix, attrs=None, choices=(), using=None):
         self.prefix = prefix
@@ -72,7 +73,13 @@ class ControlledTermWidget(AutocompleteSelect):
 
     def get_url(self):
         model = self.rel.model
-        return reverse(self.url_name, kwargs={'prefix': self.prefix})
+        return reverse(self.url_name)
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context['vocs'] = ControlledVocabulary.objects.all()
+        context['prefix'] = self.prefix
+        return context
 
     @property
     def media(self):

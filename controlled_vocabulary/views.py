@@ -11,7 +11,7 @@ class TermListView(ListView):
 
     def _get_vocabulary_record_from_request(self):
         '''Returns the requested vocabulary prefix (from url)'''
-        prefix = self.kwargs['prefix']
+        prefix = self.request.GET.get('prefix') or self.kwargs.get('prefix')
         ret = ControlledVocabulary.objects.filter(prefix=prefix).first()
         return ret
 

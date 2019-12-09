@@ -1,0 +1,6 @@
+<select class="controlled-vocabulary">
+  {% for voc in vocs %}
+    <option value="{{ voc.prefix }}" {% if prefix == voc.prefix %}selected{% endif %}>{{ voc.label }}</option>
+  {% endfor %}
+</select>
+{% include "django/forms/widgets/select.html" %}

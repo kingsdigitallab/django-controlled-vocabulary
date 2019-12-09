@@ -16,7 +16,8 @@
                 data: function(params) {
                     return {
                         term: params.term,
-                        page: params.page
+                        page: params.page,
+                        prefix: $element.data('voc-prefix')
                     };
                 }
             },
@@ -42,6 +43,10 @@
         // if we leave this class on, django will call select2
         // a second time on this select element.
         $selects.removeClass('admin-autocomplete');
+
+        $('select.controlled-vocabulary').on('change', function(e) {
+          $(this).siblings('select[data-voc-prefix]').data('voc-prefix', this.value);
+        });
     });
 
     $(document).on('formset:added', (function() {
