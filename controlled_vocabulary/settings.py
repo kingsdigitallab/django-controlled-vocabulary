@@ -1,8 +1,12 @@
 from django.conf import settings
 import os
 
+'''
+Default settings for the controlled_vocabulary app
+All settings variables can be overridden in your django project settings.py
+'''
+
 # List of import paths to vocabularies lookup classes
-# you can overwrite this in your Django settings.py
 CONTROLLED_VOCABULARY_VOCABULARIES = [
     'controlled_vocabulary.vocabularies.iso639_2',
     'controlled_vocabulary.vocabularies.dcmitype',
@@ -10,6 +14,7 @@ CONTROLLED_VOCABULARY_VOCABULARIES = [
     'controlled_vocabulary.vocabularies.mime',
     'controlled_vocabulary.vocabularies.fast_topic',
     'controlled_vocabulary.vocabularies.wikidata',
+    'controlled_vocabulary.vocabularies.viaf',
 ]
 
 # The absolute path to the folder where vocabulary files will be downloaded

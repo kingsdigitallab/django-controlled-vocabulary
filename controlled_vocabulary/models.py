@@ -34,8 +34,12 @@ class ControlledTerm(models.Model):
         ret += self.termid
         return ret
 
+    @property
+    def uri(self):
+        return self.get_absolute_url()
+
     def get_absolute_id(self):
-        return '{}:{}'.format(self.vocabulary.prefix, self.termid)
+        return '{}:{}'.format(self.vocabulary.prefix_base, self.termid)
 
     @classmethod
     def get_or_create_from_code(cls, code):
@@ -202,6 +206,10 @@ class ControlledVocabulary(models.Model):
             ret = '{}/{}'.format(ret, self.prefix)
 
         return ret
+
+    @property
+    def prefix_base(self):
+        return self.prefix.split('/')[0]
 
     def __str__(self):
         return self.label

@@ -1,14 +1,5 @@
-from .base import VocabularyBase
+from .base import VocabularyBase, fetch
 import json
-
-
-def fetch_http(url):
-    import urllib3
-    # TODO: error management
-    headers = {'user-agent': 'django-controlled-vocabulary/0.1'}
-    http = urllib3.PoolManager(headers=headers)
-    request = http.request('GET', url)
-    return request.data
 
 
 class VocabularyHTTP(VocabularyBase):
@@ -39,7 +30,7 @@ class VocabularyHTTP(VocabularyBase):
             return ret
         url = self.source['url'].format(pattern=pattern)
 
-        content = fetch_http(url)
+        content = fetch(url)
         content = content.decode('utf8')
         res = json.loads(content)
 
