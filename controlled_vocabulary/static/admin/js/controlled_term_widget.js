@@ -19,9 +19,11 @@
                         page: params.page,
                         prefix: $element.data('voc-prefix')
                     };
-                }
+                },
+                // Used to avoid excessive amount of requests
+                delay: 300,
             },
-            templateResult: format_term
+            templateResult: format_term,
         }, options);
         $element.select2(settings);
     };

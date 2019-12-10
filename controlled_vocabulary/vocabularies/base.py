@@ -16,15 +16,6 @@ class VocabularyBase():
     concept = ''
 
 
-def fetch(url):
-    import urllib3
-    # TODO: error management
-    headers = {'user-agent': 'django-controlled-vocabulary/0.1'}
-    http = urllib3.PoolManager(headers=headers)
-    request = http.request('GET', url)
-    return request.data
-
-
 def chrono(msg):
     from datetime import datetime
     now = datetime.now()
