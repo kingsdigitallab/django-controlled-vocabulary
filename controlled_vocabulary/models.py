@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.admin.widgets import AutocompleteSelect
+from django.contrib.admin.widgets import AutocompleteSelect, AutocompleteSelectMultiple
 from django.urls.base import reverse
 from django import forms
+from django.forms.widgets import SelectMultiple
 
 LENGTH_LABEL = 200
 LENGTH_IDENTIFIER = 50
@@ -64,8 +65,7 @@ class ControlledTerm(models.Model):
         return '{} ({})'.format(self.label, self.vocabulary.prefix)
 
 
-class ControlledTermWidget(AutocompleteSelect):
-
+class ControlledTermWidgetMixin:
     url_name = 'controlled_terms'
     template_name = 'controlled_vocabulary/controlled_term.html'
 
@@ -77,7 +77,6 @@ class ControlledTermWidget(AutocompleteSelect):
         super().__init__(rel, admin_site, attrs=attrs, choices=choices, using=using)
 
     def get_url(self):
-        model = self.rel.model
         return reverse(self.url_name)
 
     def get_context(self, name, value, attrs):
@@ -116,7 +115,8 @@ class ControlledTermWidget(AutocompleteSelect):
 
     @property
     def media(self):
-        other = forms.Media(
+        ret = super().media
+        ret += forms.Media(
             js=(
                 # init.js is included here to ensure the order is correct
                 # see Media.merge()
@@ -131,14 +131,28 @@ class ControlledTermWidget(AutocompleteSelect):
                 ),
             },
         )
-        return super().media + other
+        return ret
 
     def value_from_datadict(self, *args, **kwargs):
+        '''
+        Called when the user saves a parent record.
+        It transforms the widget value into the id of a Term record.
+        We have to create the Term record on the fly as its value
+        comes from an autocomplete service.
+
+        termid:label:description
+        '''
         ret = super().value_from_datadict(*args, **kwargs)
+
+        return self._value_from_datadict_single(ret)
+
+    def _value_from_datadict_single(self, value):
+        ret = value
+
         if ret:
             parts = str(ret).split(':')
             if len(parts) == 3:
-                # 10:abc
+                # 10:abc:description
                 # where 10 is a ControlledVocabulary.id
                 # and abc is a ControlledTerm.termid
                 # We return the ControlledTerm.id
@@ -148,6 +162,26 @@ class ControlledTermWidget(AutocompleteSelect):
                     label=parts[2]
                 )
                 ret = term.id
+
+        return ret
+
+
+class ControlledTermWidget(ControlledTermWidgetMixin, AutocompleteSelect):
+    pass
+
+
+class ControlledTermsWidget(ControlledTermWidgetMixin, AutocompleteSelectMultiple):
+
+    def value_from_datadict(self, *args, **kwargs):
+        ret = super().value_from_datadict(*args, **kwargs)
+
+        if isinstance(ret, list):
+            ret = [
+                self._value_from_datadict_single(val)
+                for val
+                in ret
+            ]
+
         return ret
 
 
@@ -172,6 +206,11 @@ class ControlledTermField(models.ForeignKey):
 
         super().__init__(to, on_delete, related_name, *args, **kwargs)
 
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        kwargs['vocabularies'] = self.vocabularies
+        return name, path, args, kwargs
+
     def formfield(self, *args, **kwargs):
         '''We use a different widget than the base class'''
         from django.contrib import admin
@@ -179,10 +218,26 @@ class ControlledTermField(models.ForeignKey):
             self.remote_field, admin.site, self.vocabularies)
         return super().formfield(*args, **kwargs)
 
+
+class ControlledTermsField(models.ManyToManyField):
+    def __init__(self, vocabularies, to='controlled_vocabulary.ControlledTerm', related_name='+', *args, **kwargs):
+        '''vocabularies: see ControlledTermField'''
+
+        self.vocabularies = vocabularies
+
+        super().__init__(to, related_name, *args, **kwargs)
+
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
         kwargs['vocabularies'] = self.vocabularies
         return name, path, args, kwargs
+
+    def formfield(self, *args, **kwargs):
+        '''We use a different widget than the base class'''
+        from django.contrib import admin
+        kwargs['widget'] = ControlledTermsWidget(
+            self.remote_field, admin.site, self.vocabularies)
+        return super().formfield(*args, **kwargs)
 
 
 class ControlledVocabulary(models.Model):
