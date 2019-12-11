@@ -84,8 +84,19 @@ Add the app to the INSTALLED_APPS list in your Django settings file:
 
 ```
 INSTALLED_APPS = [
-    # other apps
+    ...
     'controlled_vocabulary',
+    ...
+]
+```
+
+Add the following path to your project urls.py:
+
+```
+urlpatterns = [
+    ...
+    path('vocabularies/', include('controlled_vocabulary.urls')),
+    ...
 ]
 ```
 
