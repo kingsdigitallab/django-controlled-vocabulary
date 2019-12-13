@@ -16,6 +16,7 @@ _A ControlledTerm field in the Django admin interface. The user selects the voca
 * look up terms from **remote** vocabularies (i.e. authority files)
 * extensible **plug-in architecture** for lookups into particular vocabularies:
   * built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
+  * see below for full list
 * **stores** used terms from remote vocabularies into your database:
   * space efficient (doesn't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
@@ -59,7 +60,7 @@ database space and keeps your application data self-contained.
 
 This project comes with built-in plugins for the following vocabularies:
 
-**ISO 639-2, DCMI Type, Wikidata, FAST Topics, MIME, Schema.org**
+**ISO 639-2, DCMI Type, Wikidata, FAST Topics, MIME, Schema.org, VIAF, FAST Forms and Genres**
 
 Those plugins are **enabled** by default; see below how to selectively enable them.
 
@@ -93,6 +94,9 @@ INSTALLED_APPS = [
 Add the following path to your project urls.py:
 
 ```
+from django.urls import path, include
+...
+
 urlpatterns = [
     ...
     path('vocabularies/', include('controlled_vocabulary.urls')),
