@@ -130,6 +130,8 @@ CONTROLLED_VOCABULARY_VOCABULARIES = [
 ]
 ```
 
+After enabling a new plug-in / manager, always run `./manage.py vocab init`.
+
 ### ControlledTermField
 
 To define a field with an autocomplete to controlled terms in your Django Model, use the following field:
