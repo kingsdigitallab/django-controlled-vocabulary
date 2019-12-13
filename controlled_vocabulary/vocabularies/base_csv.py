@@ -42,7 +42,6 @@ class VocabularyBaseCSV(VocabularyBaseList):
     def _get_searchable_terms(self):
         ret = []
         import csv
-        import psutil
 
         filepath = self._get_download_filepath(True)
 
