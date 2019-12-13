@@ -85,7 +85,7 @@ class VocabularyBaseCSV(VocabularyBaseList):
                 with open(filepath, 'wb') as fh:
                     fh.write(content)
 
-                transformer = getattr(self, 'transform_download')
+                transformer = getattr(self, 'transform_download', None)
                 if transfomer:
                     transformer()
 
