@@ -144,7 +144,10 @@ class ControlledTermWidgetMixin:
         '''
         ret = super().value_from_datadict(*args, **kwargs)
 
-        return self._value_from_datadict_single(ret)
+        return self._value_from_datadict(ret)
+
+    def _value_from_datadict(self, value):
+        return self._value_from_datadict_single(value)
 
     def _value_from_datadict_single(self, value):
         ret = value
@@ -172,8 +175,9 @@ class ControlledTermWidget(ControlledTermWidgetMixin, AutocompleteSelect):
 
 class ControlledTermsWidget(ControlledTermWidgetMixin, AutocompleteSelectMultiple):
 
-    def value_from_datadict(self, *args, **kwargs):
-        ret = super().value_from_datadict(*args, **kwargs)
+    def _value_from_datadict(self, value):
+
+        ret = value
 
         if isinstance(ret, list):
             ret = [
