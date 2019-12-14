@@ -1,0 +1,21 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+
+matrix:
+  include:
+    - python: 3.5
+      env: TOX_ENV=py35
+    - python: 3.6
+      env: TOX_ENV=py36
+
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install:
+  - pip install pip -U
+  - pip install poetry
+
+# command to run tests using coverage, e.g. python setup.py test
+script: tox -e $TOX_ENV
+
+after_success:
+  - codecov -e TOX_ENV
