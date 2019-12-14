@@ -85,12 +85,18 @@ class ControlledVocabularyConfig(AppConfig):
 
         # Do NOT move this import outside this function
         from django.contrib.contenttypes.models import ContentType
+        from django.db.utils import OperationalError
         try:
             ret = ContentType.objects.get(
                 app_label=self.label,
                 model='controlledvocabulary'
             ).model_class()
         except ContentType.DoesNotExist:
+            # table doesn't exist yet
+            pass
+        except OperationalError:
+            # django.db.utils.OperationalError: no such table:
+            # django_content_type
             pass
 
         return ret

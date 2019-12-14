@@ -46,6 +46,9 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+/tests/controlled_vocabulary
+/tests/vocabularies
+/vocabularies
 
 # Translations
 *.mo
