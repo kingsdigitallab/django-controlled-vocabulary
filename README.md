@@ -27,13 +27,13 @@ Built-in support for the following standard vocabularies:
 
 | Vocabulary | Description |
 | ------------- | ------------- |
-| Schema.org | High-level categories of content | 
-| Wikidata | High level concepts or specific instances (e.g. places, people) |
-| ISO 639-2 | Language codes |
-| DCMI Type | Dublin Core Format Type |
-| MIME | Media/File types |
-| FAST Topics | Topic categorisation |
-| FAST Forms and Genres | Genres of a piece of work |
+| [Schema.org](https://schema.org/) | High-level categories of content | 
+| [Wikidata](https://www.wikidata.org) | High level concepts or specific instances (e.g. places, people) |
+| [ISO 639-2](http://id.loc.gov/vocabulary/iso639-2.html) | Language codes |
+| [DCMI Type](https://www.dublincore.org/specifications/dublin-core/dcmi-type-vocabulary/#section-7-dcmi-type-vocabulary) | Dublin Core Format Type |
+| [MIME](https://www.iana.org/assignments/media-types/media-types.xhtml) | Media/File types |
+| [FAST Topics](https://www.oclc.org/research/themes/data-science/fast.html) | Topic categorisation |
+| [FAST Forms and Genres](https://www.oclc.org/research/themes/data-science/fast.html) | Genres of a piece of work |
 | [VIAF](https://www.oclc.org/en/viaf.html) | Various: regions, people, companies, ... |
 
 # Data Model & Software Design
