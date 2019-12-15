@@ -145,7 +145,7 @@ After enabling a new plug-in / manager, always run `./manage.py vocab init`.
 
 ### ControlledTerm(s)Field
 
-To define a field with an **autocomplete** to controlled terms in your Django Model, use the following field:
+Use the **ControlledTermField** field to define a field with an **autocomplete** to controlled terms in your Django Model:
 
 ```Python
 from controlled_vocabulary.models import ControlledTermField
@@ -164,9 +164,9 @@ Where `iso639-2` is the prefix of a controlled vocabulary in your database.
 
 ControlledTermField is essentially syntactic sugar for a [ForeignKeyField](https://docs.djangoproject.com/en/3.0/ref/models/fields/#django.db.models.ForeignKey) with an adapted [Select](https://docs.djangoproject.com/en/3.0/ref/forms/widgets/#select) widget.
 
-For multiple values, you can use **ControlledTermsField** (note the '*s*' in the name), which inherits from ManyToManyField with an adapted SelectMultiple widget.
+For multiple values, you can use **ControlledTermsField** (note the '*s*' in the name), which inherits from ManyToManyField with an adapted SelectMultiple widget. The useage is identical but obviously `null=True` should be omitted.
 
-By default the widget proposes the given vocabulary to the end user, but they can use the dropwn to switch to any other available vocabulary (see screenshot at the top of this page). To lock the selection to a single vocabulary, use this expression instead:
+By default the widget proposes the given vocabulary to the end user, but they can use the dropdown to switch to any other available vocabulary (see screenshot at the top of this page). To **lock** the selection to a single vocabulary, use this expression instead:
 
 ```Python
     language_code = ControlledTermField(
