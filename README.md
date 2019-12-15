@@ -73,7 +73,7 @@ only insert the terms used by your application. The rest will be accessed on
 demand from a file on disk or in a third-party server. This approach saves
 database space and keeps your application data self-contained.
 
-This project comes with built-in plugins for the following vocabularies. Those plugins are **enabled** by default; see below how to selectively enable them.
+This project comes with built-in plugins such a Wikidata or Schema.org. Those plugins are **enabled** by default; see below how to selectively enable them.
 
 This architecture allows third-party plugins to be supplied via separate
 python packages.
