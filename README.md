@@ -129,9 +129,9 @@ Download vocabulary data and add metadata to the database:
 
 ## Configuration
 
-### Enabling vocabulary plug-ins
+### Enabling specific vocabulary plug-ins (optional)
 
-Add the following code in your settings.py to enable specific vocabularies based on the import path of their classes.
+Currently all built-in plugins / managers are enabled by default. Add the following code in your settings.py to enable **only** specific vocabularies based on the import path of their classes. You can also use this to enable your own or third-party plugins.
 
 ```
 # List of import paths to vocabularies lookup classes
