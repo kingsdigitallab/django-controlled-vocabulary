@@ -14,9 +14,7 @@ _A ControlledTerm field in the Django admin interface. The user selects the voca
 
 * create your own controlled lists of terms (i.e. **local** lists)
 * look up terms from **remote** vocabularies (i.e. authority files)
-* extensible **plug-in architecture** for lookups into particular vocabularies:
-  * built-in vocabulary plug-ins, such as ISO 639-2 (Language codes), DCMI Type (Dublin Core resource types)
-  * see below for full list
+* extensible **plug-in architecture** for lookups into particular vocabularies (see table below for built-in plugins)
 * **stores** used terms from remote vocabularies into your database:
   * space efficient (doesn't clutter the database with unused terms)
   * self-contained (i.e. can still works offline & DB always 'semantically' complete)
@@ -24,6 +22,19 @@ _A ControlledTerm field in the Django admin interface. The user selects the voca
 * **command line tool** to download vocabulary files from authoritative sources
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
+
+Built-in support for the following standard vocabularies:
+
+| Vocabulary | Description |
+| ------------- | ------------- |
+| Schema.org | High-level categories of content | 
+| Wikidata | High level concepts or specific instances (e.g. places, people) |
+| ISO 639-2 | Language codes |
+| DCMI Type | Dublin Core Format Type |
+| MIME | Media/File types |
+| FAST Topics | Topic categorisation |
+| FAST Forms and Genres | Genres of a piece of work |
+| [VIAF](https://www.oclc.org/en/viaf.html) | Various: regions, people, companies, ... |
 
 # Data Model & Software Design
 
@@ -58,11 +69,7 @@ only insert the terms used by your application. The rest will be accessed on
 demand from a file on disk or in a third-party server. This approach saves
 database space and keeps your application data self-contained.
 
-This project comes with built-in plugins for the following vocabularies:
-
-**ISO 639-2, DCMI Type, Wikidata, FAST Topics, MIME, Schema.org, VIAF, FAST Forms and Genres**
-
-Those plugins are **enabled** by default; see below how to selectively enable them.
+This project comes with built-in plugins for the following vocabularies. Those plugins are **enabled** by default; see below how to selectively enable them.
 
 This architecture allows third-party plugins to be supplied via separate
 python packages.
