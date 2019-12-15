@@ -23,7 +23,9 @@ _A ControlledTerm field in the Django admin interface. The user selects the voca
 * [TODO] possibility to store additional **metadata** (e.g. geographic coordinates)
 * [TODO] simple **rest API** to publish your own terms
 
-Built-in support for the following standard vocabularies:
+## Standard vocabularies included
+
+Built-in plugins for the following authority files:
 
 | Vocabulary | Description |
 | ------------- | ------------- |
