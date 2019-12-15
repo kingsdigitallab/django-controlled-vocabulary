@@ -12,8 +12,8 @@ _A ControlledTerm field in the Django admin interface. The user selects the voca
 
 # Features
 
-* create your own controlled lists of terms (i.e. **local** lists)
-* look up terms from **remote** vocabularies (i.e. authority files)
+* create your own controlled lists of terms (i.e. a **local** lists, project-specific)
+* look up terms from **standard vocabularies** (i.e. **authority files** maintained by other organisations)
 * extensible **plug-in architecture** for lookups into particular vocabularies (see table below for built-in plugins)
 * **stores** used terms from remote vocabularies into your database:
   * space efficient (doesn't clutter the database with unused terms)
