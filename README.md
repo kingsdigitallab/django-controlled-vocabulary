@@ -1,4 +1,4 @@
-[![PyPI version](https://badge.fury.io/py/django-controlled-vocabulary.svg)](https://badge.fury.io/py/django-controlled-vocabulary)
+[![PyPI version](https://badge.fury.io/py/django-controlled-vocabulary.svg)](https://badge.fury.io/py/django-controlled-vocabulary)   [Advanced topics (Wiki)](https://github.com/kingsdigitallab/django-controlled-vocabulary/wiki)
 
 # Django Controlled Vocabulary
 
