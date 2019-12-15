@@ -88,13 +88,13 @@ python packages.
 
 Install into your environment:
 
-```
+```Shell
 pip install django-controlled-vocabulary
 ```
 
 Add the app to the INSTALLED_APPS list in your Django settings file:
 
-```
+```Python
 INSTALLED_APPS = [
     ...
     'controlled_vocabulary',
@@ -104,7 +104,7 @@ INSTALLED_APPS = [
 
 Add the following path to your project urls.py:
 
-```
+```Python
 from django.urls import path, include
 ...
 
@@ -117,13 +117,13 @@ urlpatterns = [
 
 Run the migrations:
 
-```
+```Shell
 ./manage.py migrate
 ```
 
 Download vocabulary data and add metadata to the database:
 
-```
+```Shell
 ./manage.py vocab init
 ```
 
@@ -133,7 +133,7 @@ Download vocabulary data and add metadata to the database:
 
 Currently all built-in plugins / managers are enabled by default. Add the following code in your settings.py to enable **only** specific vocabularies based on the import path of their classes. You can also use this to enable your own or third-party plugins.
 
-```
+```Python
 # List of import paths to vocabularies lookup classes
 CONTROLLED_VOCABULARY_VOCABULARIES = [
     'controlled_vocabulary.vocabularies.iso639_2',
@@ -145,13 +145,12 @@ After enabling a new plug-in / manager, always run `./manage.py vocab init`.
 
 ### ControlledTerm(s)Field
 
-To define a field with an autocomplete to controlled terms in your Django Model, use the following field:
+To define a field with an **autocomplete** to controlled terms in your Django Model, use the following field:
 
-```
+```Python
 from controlled_vocabulary.models import ControlledTermField
 
 ...
-
 class MyModel(models.Model):
 
     ...
@@ -161,15 +160,15 @@ class MyModel(models.Model):
     )
 ```
 
-Where 'iso639-2' is the prefix of a controlled vocabulary in your database.
+Where `iso639-2` is the prefix of a controlled vocabulary in your database.
 
-ControlledTermField is essentially syntactic sugar for a ForeignKeyField with an adapted Select Widget.
+ControlledTermField is essentially syntactic sugar for a [ForeignKeyField](https://docs.djangoproject.com/en/3.0/ref/models/fields/#django.db.models.ForeignKey) with an adapted [Select](https://docs.djangoproject.com/en/3.0/ref/forms/widgets/#select) widget.
 
-For multiple values, you can use ControlledTerm**s**Field (note the s in the name), which inherits from ManyToManyField.
+For multiple values, you can use **ControlledTermsField** (note the '*s*' in the name), which inherits from ManyToManyField with an adapted SelectMultiple widget.
 
-By default the widget proposes the given vocabulary to the end user, but they can switch to any other available vocabulary (see screenshot at the top of this page). To lock the selection to a single vocabulary, use this expression instead:
+By default the widget proposes the given vocabulary to the end user, but they can use the dropwn to switch to any other available vocabulary (see screenshot at the top of this page). To lock the selection to a single vocabulary, use this expression instead:
 
-```
+```Python
     language_code = ControlledTermField(
         ['iso639-2'],
         null=True, blank=True
@@ -178,13 +177,12 @@ By default the widget proposes the given vocabulary to the end user, but they ca
 
 You can have more than one prefix in that list if you want. The first item is always the one proposed by default on page load.
 
-
 # vocab (command line tool)
 
 vocab is a django command line tool that lets you manipulate the vocabularies
 and the plugins. To find out more use the help:
 
-```
+```Shell
 ./manage vocab help
 ```
 
