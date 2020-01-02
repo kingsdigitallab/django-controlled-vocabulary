@@ -7,7 +7,7 @@ This app provides models and admin interface to link your data to standard vocab
 
 Requirements: Python 3.5+, Django 2.2+
 
-Development Status: **Alpha** (mostly functional, work in progress)
+Development Status: **Beta**
 
 <img src="docs/img/controlled-term-widget.png" />
 
@@ -32,7 +32,7 @@ Built-in plugins for the following authority files:
 
 | Vocabulary | Description |
 | ------------- | ------------- |
-| [Schema.org](https://schema.org/) | High-level categories of content | 
+| [Schema.org](https://schema.org/) | High-level categories of content |
 | [Wikidata](https://www.wikidata.org) | High level concepts or specific instances (e.g. places, people) |
 | [ISO 639-2](http://id.loc.gov/vocabulary/iso639-2.html) | Language codes |
 | [DCMI Type](https://www.dublincore.org/specifications/dublin-core/dcmi-type-vocabulary/#section-7-dcmi-type-vocabulary) | Dublin Core Format Type |

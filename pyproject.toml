@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-controlled-vocabulary"
-version = "0.3.5"
+version = "0.4.0"
 description = "Link your data to authority lists or your own controlled lists"
 authors = ["geoffroy-noel-ddh <geoffroy.noel@kcl.ac.uk>"]
 license = "MIT"
@@ -9,7 +9,7 @@ homepage = "https://github.com/kingsdigitallab/django-controlled-vocabulary"
 repository = "https://github.com/kingsdigitallab/django-controlled-vocabulary"
 keywords = ["controlled-vocabulary", "linked-data", "vocabulary", "metadata"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Environment :: Web Environment",
   "Framework :: Django :: 2.2",
   "Operating System :: OS Independent",
