@@ -1,4 +1,5 @@
-[![PyPI version](https://badge.fury.io/py/django-controlled-vocabulary.svg)](https://badge.fury.io/py/django-controlled-vocabulary)   [Advanced topics (Wiki)](https://github.com/kingsdigitallab/django-controlled-vocabulary/wiki)
+[![PyPI version](https://badge.fury.io/py/django-controlled-vocabulary.svg)](https://badge.fury.io/py/django-controlled-vocabulary) [![Build Status](https://travis-ci.org/kingsdigitallab/django-controlled-vocabulary.svg?branch=master)](https://travis-ci.org/kingsdigitallab/django-controlled-vocabulary)
+[Advanced topics (Wiki)](https://github.com/kingsdigitallab/django-controlled-vocabulary/wiki)
 
 # Django Controlled Vocabulary
 
