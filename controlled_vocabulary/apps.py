@@ -85,7 +85,7 @@ class ControlledVocabularyConfig(AppConfig):
 
         # Do NOT move this import outside this function
         from django.contrib.contenttypes.models import ContentType
-        from django.db.utils import OperationalError
+        from django.db.utils import OperationalError, ProgrammingError
         try:
             ret = ContentType.objects.get(
                 app_label=self.label,
@@ -94,9 +94,13 @@ class ControlledVocabularyConfig(AppConfig):
         except ContentType.DoesNotExist:
             # table doesn't exist yet
             pass
+        except ProgrammingError:
+            # django.db.utils.ProgrammingError: no such table:
+            # django_content_type (e.g. postgresql)
+            pass
         except OperationalError:
             # django.db.utils.OperationalError: no such table:
-            # django_content_type
+            # django_content_type (e.g. sqlite)
             pass
 
         return ret
