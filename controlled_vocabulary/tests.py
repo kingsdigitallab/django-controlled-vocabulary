@@ -4,12 +4,11 @@ from django.core import management
 from .apps import ControlledVocabularyConfig
 
 
-class AnimalTestCase(TestCase):
-    def setUp(self):
+class ControlledVocTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
         management.call_command('vocab', 'init', verbosity=0)
-        from django.apps import apps
-        app = apps.get_app_config('controlled_vocabulary')
-        app._load_vocabulary_managers()
 
     def test_vocab_init(self):
         '''Find built-in voc created by "vocab init"'''
@@ -27,3 +26,35 @@ class AnimalTestCase(TestCase):
                 termid='123',
                 label='My Term'
             )
+
+    def test_search_term_or_none(self):
+        '''search_term_or_none()'''
+        prefix = 'wikidata'
+        pattern_exact = 'pytest'
+        pattern_partial = 'pytes'
+
+        from .utils import search_term_or_none
+
+        self.assertIsNone(search_term_or_none(prefix, None))
+        self.assertIsNone(search_term_or_none(None, pattern_exact))
+        self.assertIsNone(search_term_or_none(
+            'does-not-exist', pattern_exact
+        ))
+        self.assertIsNone(search_term_or_none(
+            prefix, 'does-not-exist-in-wikidata')
+        )
+
+        term = search_term_or_none(prefix, pattern_exact)
+        self.assertEqual(pattern_exact, term.label)
+
+        term = search_term_or_none(prefix, pattern_partial)
+        self.assertEqual(pattern_exact, term.label)
+
+        term = search_term_or_none(prefix, pattern_exact, exact=True)
+        self.assertEqual(pattern_exact, term.label)
+
+        term = search_term_or_none(prefix, pattern_partial, exact=True)
+        self.assertIsNone(term)
+
+        term = search_term_or_none(prefix, 'Q28975377', exact=True)
+        self.assertEqual(pattern_exact, term.label)

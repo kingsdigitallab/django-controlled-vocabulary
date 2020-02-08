@@ -57,7 +57,7 @@ OPTIONS:
         if show_help:
             self.stdout.write(self.help)
         else:
-            self.stdout.write('done ({})'.format(action))
+            self.stdout.write('done (vocab {})'.format(action))
 
     def action_managers(self):
         template = '{:12.12} {:25.25} {:22.22} {}'
@@ -73,8 +73,9 @@ OPTIONS:
 
     def action_update(self):
         vocs = self.app.write_vocabulary_records_from_managers()
-        for voc in vocs.values():
-            self.stdout.write(voc.__module__)
+        if self.options['verbosity'] > 0:
+            for voc in vocs.values():
+                self.stdout.write(voc.__module__)
 
     def action_refetch(self):
         self.action_fetch(True)
@@ -83,17 +84,19 @@ OPTIONS:
         for voc in self._get_vocabularies():
             download_method = getattr(voc, 'download', None)
             if download_method:
-                self.stdout.write(voc.prefix)
+                if self.options['verbosity'] > 0:
+                    self.stdout.write(voc.prefix)
                 url, filepath, size, downloaded = download_method(
                     overwrite=overwrite
                 )
-                self.stdout.write(
-                    '\t{}\n\t{}\n\t{:.3f}MB'.format(
-                        url,
-                        filepath,
-                        size / 1024 / 1024
+                if self.options['verbosity'] > 0:
+                    self.stdout.write(
+                        '\t{}\n\t{}\n\t{:.3f}MB'.format(
+                            url,
+                            filepath,
+                            size / 1024 / 1024
+                        )
                     )
-                )
 
     def action_init(self):
         self.action_update()
