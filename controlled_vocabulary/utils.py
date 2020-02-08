@@ -28,7 +28,9 @@ def search_term(prefix: str, pattern: str, exact=False) -> 'ControlledTerm':
     """Returns a `ControlledTerm` for the `ControlledVocabulary` with the
     given `prefix` and `pattern`.
 
-    It searches in the external vocabulary and returns the first matching term
+    It first searches for an exact match in the DB (ControlledTerm).
+    It then searches in the external vocabulary
+        and returns the first matching term.
     If exact is True it will return None if the first found term is not an
         exact match of pattern.
     It also saves the term in the database if it doesn't already exists.
@@ -38,6 +40,17 @@ def search_term(prefix: str, pattern: str, exact=False) -> 'ControlledTerm':
 
     ret = None
 
+    # try the DB first
+    from django.db.models import Q
+
+    ret = ControlledTerm.objects.filter(
+        Q(termid__iexact=pattern) | Q(label__iexact=pattern),
+        vocabulary__prefix=prefix
+    ).first()
+    if ret:
+        return ret
+
+    # external search
     cv = ControlledVocabulary.objects.get(prefix=prefix)
     manager = ControlledVocabularyConfig.get_vocabulary_manager(cv.prefix)
 
