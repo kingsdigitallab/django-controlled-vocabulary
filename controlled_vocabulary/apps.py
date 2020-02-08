@@ -22,9 +22,19 @@ class ControlledVocabularyConfig(AppConfig):
         return app.vocabulary_managers.get(prefix, None)
 
     def write_vocabulary_records_from_managers(self):
+        '''
+        Create or update the Vocabularies database records
+        from the vocabulary managers found in the modules listed in
+        settings.CONTROLLED_VOCABULARY_VOCABULARIES
+        '''
         from .models import ControlledTerm
 
         ControlledVocabulary = self._get_vocabulary_model()
+
+        if ControlledVocabulary is None:
+            return
+
+        self._load_vocabulary_managers()
         for manager in self.vocabulary_managers.values():
             rec = {
                 'prefix': manager.prefix,
@@ -45,15 +55,12 @@ class ControlledVocabularyConfig(AppConfig):
 
     def _load_vocabulary_managers(self):
         '''
-        Create or Update the Vocabularies database records
-        from the vocabularies found in the modules listed in
+        Reset self.vocabulary_managers as a dictionary
+        where prefix: <class>
+        for each manager class specified in
         settings.CONTROLLED_VOCABULARY_VOCABULARIES
         '''
         self.vocabulary_managers = {}
-
-        ControlledVocabulary = self._get_vocabulary_model()
-        if ControlledVocabulary is None:
-            return
 
         module_paths = get_var('VOCABULARIES')
 
