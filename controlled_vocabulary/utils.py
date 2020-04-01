@@ -51,8 +51,7 @@ def search_term(
     from django.db.models import Q
 
     ret = ControlledTerm.objects.filter(
-        Q(termid__iexact=pattern) | Q(label__iexact=pattern),
-        vocabulary__prefix=prefix
+        Q(termid__iexact=pattern) | Q(label__iexact=pattern), vocabulary__prefix=prefix
     ).first()
     if ret:
         return ret
@@ -67,9 +66,8 @@ def search_term(
     if not terms:
         return None
 
-    regex = re.compile(r"^" + pattern)
-
-    term = terms[0]
+    term = None
+    regex = re.compile(r"^{}".format(re.escape(pattern)))
 
     for t in terms:
         if exact:
