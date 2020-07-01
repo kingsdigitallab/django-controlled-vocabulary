@@ -1,20 +1,17 @@
-from django.db import models
-from django.contrib.admin.widgets import AutocompleteSelect, AutocompleteSelectMultiple
-from django.urls.base import reverse
 from django import forms
+from django.contrib.admin.widgets import AutocompleteSelect, AutocompleteSelectMultiple
+from django.db import models
 from django.forms.widgets import SelectMultiple
+from django.urls.base import reverse
 
 LENGTH_LABEL = 200
 LENGTH_IDENTIFIER = 50
 # TODO: make that a config setting
-LOCAL_VOCABULARY_BASE_URL = 'http://localhost:8000/vocabularies'
+LOCAL_VOCABULARY_BASE_URL = "http://localhost:8000/vocabularies"
 
 
 class ControlledTerm(models.Model):
-    vocabulary = models.ForeignKey(
-        'ControlledVocabulary',
-        on_delete=models.CASCADE
-    )
+    vocabulary = models.ForeignKey("ControlledVocabulary", on_delete=models.CASCADE)
     termid = models.CharField(max_length=LENGTH_LABEL)
     label = models.CharField(max_length=LENGTH_LABEL)
     description = models.TextField(null=True, blank=True)
@@ -24,14 +21,14 @@ class ControlledTerm(models.Model):
     data = models.TextField(null=True, blank=True)
 
     class Meta:
-        ordering = ['termid']
-        unique_together = ['vocabulary', 'termid']
-        verbose_name = 'Controlled Term'
+        ordering = ["termid"]
+        unique_together = ["vocabulary", "termid"]
+        verbose_name = "Controlled Term"
 
     def get_absolute_url(self):
         ret = self.vocabulary.get_absolute_url()
-        if not ret.endswith('/'):
-            ret += '/'
+        if not ret.endswith("/"):
+            ret += "/"
         ret += self.termid
         return ret
 
@@ -40,38 +37,38 @@ class ControlledTerm(models.Model):
         return self.get_absolute_url()
 
     def get_absolute_id(self):
-        return '{}:{}'.format(self.vocabulary.prefix_base, self.termid)
+        return "{}:{}".format(self.vocabulary.prefix_base, self.termid)
 
     @classmethod
     def get_or_create_from_code(cls, code):
-        '''code has the following format: prefix:termid:label
-        '''
+        """code has the following format: prefix:termid:label
+        """
         ret = None
 
-        parts = code.split(':')
+        parts = code.split(":")
         if len(parts) == 3:
             voc, _ = ControlledVocabulary.objects.get_or_create(
                 prefix=parts[0].lower().strip()
             )
             ret, _ = cls.objects.get_or_create(
-                vocabulary=voc,
-                termid=parts[1].strip(),
-                defaults={'label': parts[2]}
+                vocabulary=voc, termid=parts[1].strip(), defaults={"label": parts[2]}
             )
 
         return ret
 
     def __str__(self):
-        return '{} ({})'.format(self.label, self.vocabulary.prefix)
+        return "{} ({})".format(self.label, self.vocabulary.prefix)
 
 
 class ControlledTermWidgetMixin:
-    url_name = 'controlled_terms'
-    template_name = 'controlled_vocabulary/controlled_term.html'
+    url_name = "controlled_terms"
+    template_name = "controlled_vocabulary/controlled_term.html"
 
-    def __init__(self, rel, admin_site, vocabularies, attrs=None, choices=(), using=None):
+    def __init__(
+        self, rel, admin_site, vocabularies, attrs=None, choices=(), using=None
+    ):
         if isinstance(vocabularies, str):
-            self.vocabularies = [vocabularies, '']
+            self.vocabularies = [vocabularies, ""]
         else:
             self.vocabularies = vocabularies
         super().__init__(rel, admin_site, attrs=attrs, choices=choices, using=using)
@@ -84,32 +81,35 @@ class ControlledTermWidgetMixin:
 
         context = super().get_context(name, value, attrs)
 
-        context['vocabularies'] = ControlledVocabulary.objects.all()
+        context["vocabularies"] = ControlledVocabulary.objects.all()
 
-        if '' not in self.vocabularies:
+        if "" not in self.vocabularies:
             # filter vocabularies based on their prefix or concept
             # e,g, ['iso-639-2', 'concept.wikidata:Q35120']
-            context['vocabularies'] = context['vocabularies'].filter(
-                Q(prefix__in=[
-                    voc
-                    for voc in self.vocabularies
-                    if 'concept.' not in voc
-                ]) | Q(concept__termid__in=[
-                    voc.split(':')[-1]
-                    for voc in self.vocabularies
-                    if 'concept.' in voc
-                ])
+            context["vocabularies"] = context["vocabularies"].filter(
+                Q(
+                    prefix__in=[
+                        voc for voc in self.vocabularies if "concept." not in voc
+                    ]
+                )
+                | Q(
+                    concept__termid__in=[
+                        voc.split(":")[-1]
+                        for voc in self.vocabularies
+                        if "concept." in voc
+                    ]
+                )
             )
 
-        default_voc = context['vocabularies'][0]
-        for voc in context['vocabularies']:
+        default_voc = context["vocabularies"][0]
+        for voc in context["vocabularies"]:
             if voc.prefix == self.vocabularies[0]:
                 default_voc = voc
                 break
 
         prefix = default_voc.prefix
-        context['default_prefix'] = prefix
-        context['widget']['attrs']['data-voc-prefix'] = prefix
+        context["default_prefix"] = prefix
+        context["widget"]["attrs"]["data-voc-prefix"] = prefix
 
         return context
 
@@ -120,28 +120,24 @@ class ControlledTermWidgetMixin:
             js=(
                 # init.js is included here to ensure the order is correct
                 # see Media.merge()
-                'admin/js/jquery.init.js',
-                'admin/js/controlled_term_widget.js',
+                "admin/js/jquery.init.js",
+                "admin/js/controlled_term_widget.js",
                 # repeated to make sure it is run after ours
-                'admin/js/autocomplete.js',
+                "admin/js/autocomplete.js",
             ),
-            css={
-                'screen': (
-                    'admin/css/controlled_term_widget.css',
-                ),
-            },
+            css={"screen": ("admin/css/controlled_term_widget.css",),},
         )
         return ret
 
     def value_from_datadict(self, *args, **kwargs):
-        '''
+        """
         Called when the user saves a parent record.
         It transforms the widget value into the id of a Term record.
         We have to create the Term record on the fly as its value
         comes from an autocomplete service.
 
         termid:label:description
-        '''
+        """
         ret = super().value_from_datadict(*args, **kwargs)
 
         return self._value_from_datadict(ret)
@@ -153,7 +149,7 @@ class ControlledTermWidgetMixin:
         ret = value
 
         if ret:
-            parts = str(ret).split(':')
+            parts = str(ret).split(":")
             if len(parts) == 3:
                 # 10:abc:description
                 # where 10 is a ControlledVocabulary.id
@@ -162,8 +158,9 @@ class ControlledTermWidgetMixin:
                 term, created = ControlledTerm.objects.get_or_create(
                     vocabulary_id=parts[0],
                     termid=parts[1],
-                    label=parts[2]
+                    defaults={"label": parts[2]},
                 )
+
                 ret = term.id
 
         return ret
@@ -174,24 +171,27 @@ class ControlledTermWidget(ControlledTermWidgetMixin, AutocompleteSelect):
 
 
 class ControlledTermsWidget(ControlledTermWidgetMixin, AutocompleteSelectMultiple):
-
     def _value_from_datadict(self, value):
 
         ret = value
 
         if isinstance(ret, list):
-            ret = [
-                self._value_from_datadict_single(val)
-                for val
-                in ret
-            ]
+            ret = [self._value_from_datadict_single(val) for val in ret]
 
         return ret
 
 
 class ControlledTermField(models.ForeignKey):
-    def __init__(self, vocabularies, to='controlled_vocabulary.ControlledTerm', on_delete=models.SET_NULL, related_name='+', *args, **kwargs):
-        '''
+    def __init__(
+        self,
+        vocabularies,
+        to="controlled_vocabulary.ControlledTerm",
+        on_delete=models.SET_NULL,
+        related_name="+",
+        *args,
+        **kwargs
+    ):
+        """
         vocabularies: a list of vocabularies the user can chose terms from.
             The first entry of the list is the default vocabulary.
             An entry has one of the following format:
@@ -204,7 +204,7 @@ class ControlledTermField(models.ForeignKey):
             or any other vocabulary.
 
             vocabularies='myvoc' is syntactic sugar for ['myvoc']
-        '''
+        """
 
         self.vocabularies = vocabularies
 
@@ -212,20 +212,29 @@ class ControlledTermField(models.ForeignKey):
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['vocabularies'] = self.vocabularies
+        kwargs["vocabularies"] = self.vocabularies
         return name, path, args, kwargs
 
     def formfield(self, *args, **kwargs):
-        '''We use a different widget than the base class'''
+        """We use a different widget than the base class"""
         from django.contrib import admin
-        kwargs['widget'] = ControlledTermWidget(
-            self.remote_field, admin.site, self.vocabularies)
+
+        kwargs["widget"] = ControlledTermWidget(
+            self.remote_field, admin.site, self.vocabularies
+        )
         return super().formfield(*args, **kwargs)
 
 
 class ControlledTermsField(models.ManyToManyField):
-    def __init__(self, vocabularies, to='controlled_vocabulary.ControlledTerm', related_name='+', *args, **kwargs):
-        '''vocabularies: see ControlledTermField'''
+    def __init__(
+        self,
+        vocabularies,
+        to="controlled_vocabulary.ControlledTerm",
+        related_name="+",
+        *args,
+        **kwargs
+    ):
+        """vocabularies: see ControlledTermField"""
 
         self.vocabularies = vocabularies
 
@@ -233,14 +242,16 @@ class ControlledTermsField(models.ManyToManyField):
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['vocabularies'] = self.vocabularies
+        kwargs["vocabularies"] = self.vocabularies
         return name, path, args, kwargs
 
     def formfield(self, *args, **kwargs):
-        '''We use a different widget than the base class'''
+        """We use a different widget than the base class"""
         from django.contrib import admin
-        kwargs['widget'] = ControlledTermsWidget(
-            self.remote_field, admin.site, self.vocabularies)
+
+        kwargs["widget"] = ControlledTermsWidget(
+            self.remote_field, admin.site, self.vocabularies
+        )
         return super().formfield(*args, **kwargs)
 
 
@@ -249,26 +260,26 @@ class ControlledVocabulary(models.Model):
     label = models.CharField(max_length=LENGTH_LABEL, unique=True)
     base_url = models.URLField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    concept = ControlledTermField('wikidata', null=True, blank=True)
+    concept = ControlledTermField("wikidata", null=True, blank=True)
 
     class Meta:
-        ordering = ['prefix']
-        verbose_name = 'Controlled Vocabulary'
-        verbose_name_plural = 'Controlled Vocabularies'
+        ordering = ["prefix"]
+        verbose_name = "Controlled Vocabulary"
+        verbose_name_plural = "Controlled Vocabularies"
 
     def get_absolute_url(self):
-        ret = (self.base_url or '').strip()
+        ret = (self.base_url or "").strip()
 
         if not ret:
             # local web path for local vocabulary
-            ret = LOCAL_VOCABULARY_BASE_URL.rstrip('/')
-            ret = '{}/{}'.format(ret, self.prefix)
+            ret = LOCAL_VOCABULARY_BASE_URL.rstrip("/")
+            ret = "{}/{}".format(ret, self.prefix)
 
         return ret
 
     @property
     def prefix_base(self):
-        return self.prefix.split('/')[0]
+        return self.prefix.split("/")[0]
 
     def __str__(self):
         return self.label
