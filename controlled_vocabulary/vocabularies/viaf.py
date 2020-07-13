@@ -1,5 +1,3 @@
-import re
-
 from .base_http import VocabularyHTTP
 
 
