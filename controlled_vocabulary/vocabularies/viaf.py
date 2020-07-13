@@ -25,7 +25,7 @@ class VocabularyViaf(VocabularyHTTP):
     def parse_search_response(self, res):
         ret = []
 
-        if "result" in res and res["result"]:
+        if "result" in res and res["result"] is not None:
             for doc in res["result"]:
                 ret.append([doc["viafid"], doc["term"]])
 
