@@ -27,9 +27,11 @@ class VocabularyISO639_2(VocabularyBaseCSV):
 
     def _get_terms_from_csv_line(self, line):
         # arm|hye|hy|Armenian|arménien
-        ret = [[line[0], line[3], 'B']]
+        ret = [[line[0], line[3]]]
 
         if line[1].strip():
-            ret.append([line[1], line[3], 'T'])
+            ret.append([line[1], line[3]])
+            ret[0].append('B')
+            ret[1].append('T')
 
         return ret
