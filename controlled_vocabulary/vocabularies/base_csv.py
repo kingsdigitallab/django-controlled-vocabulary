@@ -54,14 +54,12 @@ class VocabularyBaseCSV(VocabularyBaseList):
 
         with open(filepath) as tsv:
             first_line = True
-            chrono('READ CSV ' + filepath)
             for line in csv.reader(tsv, **options):
                 if not first_line and len(line) > 1:
                     term = self._get_term_from_csv_line(line)
                     if term is not None:
                         ret.append(term)
                 first_line = False
-            chrono('END CSV ' + filepath)
 
         return ret
 
