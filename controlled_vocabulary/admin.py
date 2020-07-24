@@ -54,4 +54,3 @@ class ControlledTermAdmin(admin.ModelAdmin):
         return obj.get_absolute_id()
 
     admin_field_absolute_id.short_description = "absolute id"
-

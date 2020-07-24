@@ -33,8 +33,7 @@ class ControlledVocTestCase(TestCase):
         self.assertIsNone(search_term_or_none(prefix, None))
         self.assertIsNone(search_term_or_none(None, pattern_exact))
         self.assertIsNone(search_term_or_none("does-not-exist", pattern_exact))
-        self.assertIsNone(
-            search_term_or_none(prefix, "does-not-exist-in-wikidata"))
+        self.assertIsNone(search_term_or_none(prefix, "does-not-exist-in-wikidata"))
 
         term = search_term_or_none(prefix, pattern_exact)
         self.assertEqual(pattern_exact, term.label)
@@ -51,9 +50,7 @@ class ControlledVocTestCase(TestCase):
         term = search_term_or_none(prefix, "Q28975377", exact=True)
         self.assertEqual(pattern_exact, term.label)
 
-        self.assertNotEqual("Essay", search_term_or_none(
-            "fast-topic", "Essay").label)
+        self.assertNotEqual("Essay", search_term_or_none("fast-topic", "Essay").label)
         self.assertEqual(
-            "Essay", search_term_or_none(
-                "fast-topic", "Essay", exact=True).label
+            "Essay", search_term_or_none("fast-topic", "Essay", exact=True).label
         )

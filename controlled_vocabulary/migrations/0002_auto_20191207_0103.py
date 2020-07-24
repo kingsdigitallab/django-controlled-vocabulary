@@ -8,13 +8,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('controlled_vocabulary', '0001_initial'),
+        ("controlled_vocabulary", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='controlledvocabulary',
-            name='concept',
-            field=controlled_vocabulary.models.ControlledTermField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='controlled_vocabulary.ControlledTerm', vocabularies='wikidata'),
+            model_name="controlledvocabulary",
+            name="concept",
+            field=controlled_vocabulary.models.ControlledTermField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="controlled_vocabulary.ControlledTerm",
+                vocabularies="wikidata",
+            ),
         ),
     ]

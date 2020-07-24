@@ -8,38 +8,59 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ControlledVocabulary',
+            name="ControlledVocabulary",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('prefix', models.CharField(max_length=50, unique=True)),
-                ('label', models.CharField(max_length=200, unique=True)),
-                ('base_url', models.URLField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('concept', models.CharField(blank=True, default='', max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("prefix", models.CharField(max_length=50, unique=True)),
+                ("label", models.CharField(max_length=200, unique=True)),
+                ("base_url", models.URLField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("concept", models.CharField(blank=True, default="", max_length=50)),
             ],
             options={
-                'ordering': ['prefix'],
-                'verbose_name_plural': 'Controlled vocabularies',
+                "ordering": ["prefix"],
+                "verbose_name_plural": "Controlled vocabularies",
             },
         ),
         migrations.CreateModel(
-            name='ControlledTerm',
+            name="ControlledTerm",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('termid', models.CharField(max_length=200)),
-                ('label', models.CharField(max_length=200)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('data', models.TextField(blank=True, null=True)),
-                ('vocabulary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='controlled_vocabulary.ControlledVocabulary')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("termid", models.CharField(max_length=200)),
+                ("label", models.CharField(max_length=200)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("data", models.TextField(blank=True, null=True)),
+                (
+                    "vocabulary",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="controlled_vocabulary.ControlledVocabulary",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['termid'],
-                'unique_together': {('vocabulary', 'termid')},
+                "ordering": ["termid"],
+                "unique_together": {("vocabulary", "termid")},
             },
         ),
     ]
