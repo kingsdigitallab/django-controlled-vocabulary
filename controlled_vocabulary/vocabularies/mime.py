@@ -13,5 +13,5 @@ class VocabularyMime(VocabularyBaseCSV):
         "url": "https://pkgstore.datahub.io/core/media-types/media-types_csv/data/923aafab3de13cee5844f9329222c5c5/media-types_csv.csv",
     }
 
-    def _get_term_from_csv_line(self, line):
-        return [line[0], line[0]]
+    def _get_terms_from_csv_line(self, line):
+        return [[line[0], line[0]]]

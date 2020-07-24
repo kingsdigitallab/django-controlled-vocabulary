@@ -14,16 +14,33 @@ class VocabularyBaseList(VocabularyBase):
         """
         Subclass needs to override this function.
         """
-        ret = [
-            ["en", "English"],
-            ["fr", "French"],
-        ]
+        ret = (
+            ("en", "English"),
+            ("fr", "French"),
+        )
         return ret
 
     def search(self, pattern):
-        # get all terms from the subclass
+        """Returns terms that match the given patterns
+        among those found in the full list supplied by _get_searchable_terms.
+
+        Matching rules:
+            comparisons are case-insensitive
+            match any term which label contains <pattern>
+            match any term which termid starts with <pattern>
+
+        Sorting priorities (highest first):
+            exact match on the termid and label
+            exact match on the termid
+            exact match on the label
+            beginning of label matches the pattern (then alphabetical)
+            any part of the label matches the pattern (then alphabetical)
+        """
+        # get all terms from the subclass and cache them in the object
         self._searchable_terms = getattr(self, "_searchable_terms", None)
         if self._searchable_terms is None:
+            # leave this here, so we only lazy-load terms
+            # the first time they are needed.
             self._searchable_terms = self._get_searchable_terms()
 
             # sort alphabetically
@@ -31,7 +48,7 @@ class VocabularyBaseList(VocabularyBase):
 
         ret = []
 
-        # return only terms that match the pattern
+        # return only terms that match the input pattern
         pattern = pattern.lower()
 
         if pattern:

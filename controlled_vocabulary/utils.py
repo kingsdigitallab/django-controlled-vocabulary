@@ -57,8 +57,10 @@ def search_term(
         return ret
 
     # external search
-    cv = ControlledVocabulary.objects.get(prefix=prefix)
-    manager = ControlledVocabularyConfig.get_vocabulary_manager(cv.prefix)
+    vocabulary = ControlledVocabulary.objects.get(prefix=prefix)
+    manager = ControlledVocabularyConfig.get_vocabulary_manager(
+        vocabulary.prefix
+    )
 
     pattern = pattern.lower()
     terms = manager.search(pattern)
@@ -84,7 +86,7 @@ def search_term(
 
     desc = term[2] if len(term) > 2 else ""
     ret, _ = ControlledTerm.objects.get_or_create(
-        vocabulary=cv,
+        vocabulary=vocabulary,
         termid=term[0].strip(),
         defaults={"label": term[1], "description": desc},
     )

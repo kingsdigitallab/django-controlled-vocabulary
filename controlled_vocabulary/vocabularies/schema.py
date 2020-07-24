@@ -17,5 +17,5 @@ class VocabularySchema(VocabularyBaseCSV):
         "url": "https://schema.org/version/latest/schema-types.csv",
     }
 
-    def _get_term_from_csv_line(self, line):
-        return [line[1], decamel(line[1])]
+    def _get_terms_from_csv_line(self, line):
+        return [[line[1], decamel(line[1])]]

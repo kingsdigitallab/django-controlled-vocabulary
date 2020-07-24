@@ -1,10 +1,15 @@
 from django.core import management
 from django.test import TestCase
 
+from .apps import ControlledVocabularyConfig
 from .models import ControlledTerm, ControlledVocabulary
 
 
 class ControlledVocTestCase(TestCase):
+    '''
+    python manage.py test controlled_vocabulary
+    python manage.py test controlled_vocabulary.tests.ControlledVocTestCase.test_search_list_by_termid
+    '''
     @classmethod
     def setUpTestData(cls):
         management.call_command("vocab", "init", verbosity=0)
@@ -50,7 +55,50 @@ class ControlledVocTestCase(TestCase):
         term = search_term_or_none(prefix, "Q28975377", exact=True)
         self.assertEqual(pattern_exact, term.label)
 
+        term = search_term_or_none(prefix, "q28975377", exact=True)
+        self.assertEqual(pattern_exact, term.label)
+
         self.assertNotEqual("Essay", search_term_or_none("fast-topic", "Essay").label)
         self.assertEqual(
             "Essay", search_term_or_none("fast-topic", "Essay", exact=True).label
         )
+
+    def test_search_lang_by_label(self):
+        prefix = "iso639-2"
+
+        manager = ControlledVocabularyConfig.get_vocabulary_manager(prefix)
+
+        terms = manager.search("engl")
+        # expect at least 'English', 'English, Middle', 'English, Old'
+        self.assertGreater(len([t for t in terms if 'English' in t[1]]), 2)
+        self.assertEqual(terms[0][1], 'English')
+
+        terms = manager.search("german")
+        # expect at least 'English', 'English, Middle', 'English, Old'
+        self.assertGreater(len([t for t in terms if 'German' in t[1]]), 2)
+        self.assertEqual(terms[0][1], 'German')
+        self.assertEqual(terms[1][1], 'German')
+        self.assertNotEqual(terms[0][0], terms[1][0])
+
+    def test_search_lang_by_termid(self):
+        '''base_list.search() should lookup termid as well as label
+        See gh-8
+        '''
+
+        prefix = "iso639-2"
+        termid = "glv"
+        label = "Manx"
+
+        # search by termid using the voc manager
+        manager = ControlledVocabularyConfig.get_vocabulary_manager(prefix)
+
+        terms = manager.search("fr")
+        print(terms)
+
+        # make sure we don't have that termid in the database already
+        self.assertFalse(
+            ControlledTerm.objects.filter(
+                vocabulary__prefix=prefix, termid=termid
+            ).exists()
+        )
+

@@ -8,26 +8,33 @@ Usage: vocab ACTION OPTIONS
 
 ACTION:
 
+  init
+    same as 'update' followed by 'fetch'
   update
     update vocabulary records from the enabled plugins / managers
-  managers
-    lists the plugins / managers
   fetch
     download the remote data source for each plugin / manager
     a data source can be a CSV, RDF, ...
     note: some managers don't need source files
     note: does nothing if the file already exists
   refetch
-    same as download but always download the source data even if already on disk
-  init
-    same as 'update' followed by 'fetch'
+    same as fetch but always download the source data even if already on disk
+  managers
+    lists the plugins / managers
+  search
+    look up a pattern in the vocabulary with the given prefix
+    note: this bypasses the database and calls search() on the voc manager
+    e.g. vocab search -f iso639-2 -p english
 
 OPTIONS:
 
   -f PREFIXES
-    limit action to some vocabularies.
+    limit action to some vocabularies
     PREFIX is a comma separated list of vocabulary prefixes.
     Use managers to see available prefixes.
+  -p PATTERN
+    a pattern to look up in a vocabulary
+    pattern is a plain string, not a regular expression
 
 """
 
@@ -38,6 +45,10 @@ OPTIONS:
             "-f", action="store", help="list of vocabulary prefixes",
         )
 
+        parser.add_argument(
+            "-p", action="store", help="a string pattern to look up",
+        )
+
     def handle(self, *args, **options):
         show_help = True
 
@@ -45,7 +56,6 @@ OPTIONS:
         action = options["action"][0]
 
         from django.apps import apps
-
         self.app = apps.get_app_config("controlled_vocabulary")
 
         action_method = getattr(self, "action_" + action, None)
@@ -57,6 +67,19 @@ OPTIONS:
             self.stdout.write(self.help)
         else:
             self.stdout.write("done (vocab {})".format(action))
+
+    def action_search(self):
+        pattern = (self.options['p'] or '').strip()
+        prefixes = self._get_prefixes()
+        if not (prefixes and pattern):
+            self.stdout.write("Please use -f and -p "
+                              "to pass a vocabulary prefix and a pattern")
+
+        for prefix in prefixes:
+            manager = self.app.get_vocabulary_manager(prefix)
+            res = manager.search(pattern)
+            self.stdout.write("{}: {}".format(prefix, type(manager)))
+            self.stdout.write(repr(res))
 
     def action_managers(self):
         template = "{:12.12} {:25.25} {:22.22} {}"

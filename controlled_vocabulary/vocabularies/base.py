@@ -17,13 +17,19 @@ class VocabularyBase:
 
 
 def fetch(url):
+    """Returns the content at the given url.
+    Returns None is status != 200."""
     import urllib3
+    ret = None
 
     # TODO: error management
     headers = {"user-agent": "django-controlled-vocabulary/0.1"}
     http = urllib3.PoolManager(headers=headers)
     request = http.request("GET", url)
-    return request.data
+    if request.status == 200:
+        ret = request.data
+
+    return ret
 
 
 def chrono(msg):
