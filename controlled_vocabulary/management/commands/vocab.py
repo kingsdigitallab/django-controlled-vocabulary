@@ -77,9 +77,12 @@ OPTIONS:
 
         for prefix in prefixes:
             manager = self.app.get_vocabulary_manager(prefix)
-            res = manager.search(pattern)
-            self.stdout.write("{}: {}".format(prefix, type(manager)))
-            self.stdout.write(repr(res))
+            if manager:
+                res = manager.search(pattern)
+                self.stdout.write("{}: {}".format(prefix, type(manager)))
+                self.stdout.write(repr(res))
+            else:
+                self.stdout.write("{}: manager not found".format(prefix))
 
     def action_managers(self):
         template = "{:12.12} {:25.25} {:22.22} {}"
