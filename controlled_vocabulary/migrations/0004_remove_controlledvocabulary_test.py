@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('controlled_vocabulary', '0003_auto_20191211_0113'),
+        ("controlled_vocabulary", "0003_auto_20191211_0113"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='controlledvocabulary',
-            name='test',
-        ),
+        migrations.RemoveField(model_name="controlledvocabulary", name="test",),
     ]

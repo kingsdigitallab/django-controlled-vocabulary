@@ -7,21 +7,30 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('controlled_vocabulary', '0002_auto_20191207_0103'),
+        ("controlled_vocabulary", "0002_auto_20191207_0103"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='controlledterm',
-            options={'ordering': ['termid'], 'verbose_name': 'Controlled Term'},
+            name="controlledterm",
+            options={"ordering": ["termid"], "verbose_name": "Controlled Term"},
         ),
         migrations.AlterModelOptions(
-            name='controlledvocabulary',
-            options={'ordering': ['prefix'], 'verbose_name': 'Controlled Vocabulary', 'verbose_name_plural': 'Controlled Vocabularies'},
+            name="controlledvocabulary",
+            options={
+                "ordering": ["prefix"],
+                "verbose_name": "Controlled Vocabulary",
+                "verbose_name_plural": "Controlled Vocabularies",
+            },
         ),
         migrations.AddField(
-            model_name='controlledvocabulary',
-            name='test',
-            field=controlled_vocabulary.models.ControlledTermsField(blank=True, related_name='_controlledvocabulary_test_+', to='controlled_vocabulary.ControlledTerm', vocabularies='wikidata'),
+            model_name="controlledvocabulary",
+            name="test",
+            field=controlled_vocabulary.models.ControlledTermsField(
+                blank=True,
+                related_name="_controlledvocabulary_test_+",
+                to="controlled_vocabulary.ControlledTerm",
+                vocabularies="wikidata",
+            ),
         ),
     ]
