@@ -11,12 +11,8 @@ def search_term_or_none(
     """Returns a `ControlledTerm` for the `ControlledVocabulary` with the
     given `prefix` and `pattern`.
 
-    It searches in the external vocabulary and returns the first matching term
-    If exact is True it will return None if the exact pattern is not found.
-    It also saves the term in the database if it doesn't already exists.
-
-    Returns None if no vocabulary with that prefix is found.
-    Returns None if the pattern is None or empty.
+    Behaves like search_term() except that it will return None
+    if the vocabulary prefix doesn't exist.
     """
     ret = None
 
@@ -35,17 +31,23 @@ def search_term(
     """Returns a `ControlledTerm` for the `ControlledVocabulary` with the
     given `prefix` and `pattern`.
 
-    It first searches for an exact match in the DB (ControlledTerm).
-    It then searches in the external vocabulary
+    'pattern' is a plain string, not a regular expression.
+
+    Method:
+        first searches for an exact match in the DB (ControlledTerm).
+        It then searches using the external vocabulary / voc manager
         and returns the first matching term.
-    If exact is True it will return None if the first found term is not an
-        exact match of pattern.
-    It also saves the term in the database if it doesn't already exists.
+        If that secondary search is successful, it will save found term
+        in the database as new ControlledTerm record.
+
+    If 'exact' is True it only consider an exact match on the label or termid.
+    Otherwise, it returns the first term which label or termid contains the
+    given pattern.
+
+    Returns None if no match is found.
 
     Throws an exception if no vocabulary with that prefix is found.
     """
-
-    ret = None
 
     # try the DB first
     from django.db.models import Q
@@ -56,7 +58,7 @@ def search_term(
     if ret:
         return ret
 
-    # external search
+    # search using the voc manager
     vocabulary = ControlledVocabulary.objects.get(prefix=prefix)
     manager = ControlledVocabularyConfig.get_vocabulary_manager(
         vocabulary.prefix
@@ -65,30 +67,25 @@ def search_term(
     pattern = pattern.lower()
     terms = manager.search(pattern)
 
-    if not terms:
-        return None
+    if terms:
+        term = None
 
-    term = None
-    regex = re.compile(r"^{}".format(re.escape(pattern)))
+        for t in terms:
+            if exact:
+                if t[1].lower() == pattern or t[0].lower() == pattern:
+                    term = t
+                    break
+            else:
+                if pattern in t[1].lower() or pattern in t[0].lower():
+                    term = t
+                    break
 
-    for t in terms:
-        if exact:
-            if t[1].lower() == pattern or t[0].lower() == pattern:
-                term = t
-                break
-        else:
-            if regex.match(t[1].lower()) or regex.match(t[0].lower()):
-                term = t
-                break
-
-    if not term:
-        return None
-
-    desc = term[2] if len(term) > 2 else ""
-    ret, _ = ControlledTerm.objects.get_or_create(
-        vocabulary=vocabulary,
-        termid=term[0].strip(),
-        defaults={"label": term[1], "description": desc},
-    )
+        if term:
+            desc = term[2] if len(term) > 2 else ""
+            ret, _ = ControlledTerm.objects.get_or_create(
+                vocabulary=vocabulary,
+                termid=term[0].strip(),
+                defaults={"label": term[1], "description": desc},
+            )
 
     return ret

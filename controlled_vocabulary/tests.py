@@ -72,7 +72,7 @@ class ControlledVocTestCase(TestCase):
 
         from .utils import search_term_or_none
 
-        if 0:
+        if 1:
             self.assertIsNone(search_term_or_none(prefix, None))
             self.assertIsNone(search_term_or_none(None, pattern_exact))
             self.assertIsNone(search_term_or_none("does-not-exist", pattern_exact))
