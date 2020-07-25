@@ -27,14 +27,14 @@ class VocabularyBaseList(VocabularyBase):
         Matching rules:
             comparisons are case-insensitive
             match any term which label contains <pattern>
-            match any term which termid starts with <pattern>
+            match any term which termid matches exactly with <pattern>
 
         Sorting priorities (highest first):
             exact match on the termid and label
-            exact match on the termid
-            exact match on the label
-            beginning of label matches the pattern (then alphabetical)
-            any part of the label matches the pattern (then alphabetical)
+            exact match on the termid [4]
+            exact match on the label [1]
+            beginning of label matches the pattern (then alphabetical) [1]
+            any part of the label matches the pattern (then alphabetical) [1]
         """
         # get all terms from the subclass and cache them in the object
         self._searchable_terms = getattr(self, "_searchable_terms", None)
@@ -52,20 +52,24 @@ class VocabularyBaseList(VocabularyBase):
         pattern = pattern.lower()
 
         if pattern:
-            exact_match = None
-            start_match_count = 0
             for term in self._searchable_terms:
-                if pattern in term[1].lower():
-                    if term[1].lower() == pattern:
-                        exact_match = term
-                    elif term[1].lower().startswith(pattern):
-                        ret.insert(start_match_count, term)
-                        start_match_count += 1
-                    else:
-                        ret.append(term)
-            if exact_match:
-                ret.insert(0, exact_match)
+                score = 0
+                label = term[1].lower()
+                tid = term[0].lower()
+                if pattern in label: score += 1
+                if term[0].lower() == pattern: score += 4
+                if score:
+                    if label.startswith(pattern): score += 1
+                    if label == pattern: score += 1
+                    desc = ''
+                    if len(term) > 2:
+                        desc = term[2]
+                    ret.append([term[0], term[1], desc, score])
+
+            # sort by score, then label then description
+            ret = sorted(ret, key=lambda t: [-t[3], t[1], t[2]])
         else:
+            # returns everything
             ret = self._searchable_terms
 
         return ret
