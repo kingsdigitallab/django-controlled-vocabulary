@@ -5,26 +5,6 @@ from .apps import ControlledVocabularyConfig
 from .models import ControlledTerm, ControlledVocabulary
 
 
-def search_term_or_none(
-    prefix: str, pattern: str, exact: bool = False
-) -> Optional["ControlledTerm"]:
-    """Returns a `ControlledTerm` for the `ControlledVocabulary` with the
-    given `prefix` and `pattern`.
-
-    Behaves like search_term() except that it will return None
-    if the vocabulary prefix doesn't exist.
-    """
-    ret = None
-
-    if prefix and pattern:
-        try:
-            ret = search_term(prefix, pattern, exact=exact)
-        except ControlledVocabulary.DoesNotExist:
-            pass
-
-    return ret
-
-
 def search_term(
     prefix: str, pattern: str, exact: bool = False
 ) -> Optional["ControlledTerm"]:
@@ -89,3 +69,25 @@ def search_term(
             )
 
     return ret
+
+
+def search_term_or_none(
+    prefix: str, pattern: str, exact: bool = False
+) -> Optional["ControlledTerm"]:
+    """Returns a `ControlledTerm` for the `ControlledVocabulary` with the
+    given `prefix` and `pattern`.
+
+    Behaves like search_term() except that it will return None
+    if the vocabulary prefix doesn't exist.
+    """
+    ret = None
+
+    if prefix and pattern:
+        try:
+            ret = search_term(prefix, pattern, exact=exact)
+        except ControlledVocabulary.DoesNotExist:
+            pass
+
+    return ret
+
+

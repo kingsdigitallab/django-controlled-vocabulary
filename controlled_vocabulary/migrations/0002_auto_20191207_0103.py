@@ -5,6 +5,18 @@ from django.db import migrations
 import django.db.models.deletion
 
 
+def write_vocabulary_records_from_managers(migration_apps, schema_editor):
+    '''
+    We populate ControlledVocabulary from the managers here
+    because other apps may need them during initial data migrations
+    to run utils.search_term().
+    '''
+
+    from django.apps import apps
+    app = apps.get_app_config("controlled_vocabulary")
+    app.write_vocabulary_records_from_managers_during_migration(migration_apps)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -24,4 +36,5 @@ class Migration(migrations.Migration):
                 vocabularies="wikidata",
             ),
         ),
+        migrations.RunPython(write_vocabulary_records_from_managers)
     ]
