@@ -41,17 +41,35 @@ class ControlledTerm(models.Model):
 
     @classmethod
     def get_or_create_from_code(cls, code):
-        """code has the following format: prefix:termid:label
+        """code has the following format: prefix:termid:label.
+        Creates vocabulary record if needed.
         """
+        return cls._get_or_create_from_code(
+            code,
+            ControlledVocabulary,
+            ControlledTerm
+        )
+
+    @staticmethod
+    def _get_or_create_from_code(code, vocabulary_model, term_model):
+        '''
+        'vocabulary_model' can be either
+        <class 'controlled_vocabulary.models.ControlledVocabulary'>
+        or <class '__fake__.ControlledVocabulary'>
+
+        same with term_model.
+        '''
         ret = None
 
         parts = code.split(":")
         if len(parts) == 3:
-            voc, _ = ControlledVocabulary.objects.get_or_create(
+            voc, _ = vocabulary_model.objects.get_or_create(
                 prefix=parts[0].lower().strip()
             )
-            ret, _ = cls.objects.get_or_create(
-                vocabulary=voc, termid=parts[1].strip(), defaults={"label": parts[2]}
+            ret, _ = term_model.objects.get_or_create(
+                vocabulary=voc,
+                termid=parts[1].strip(),
+                defaults={"label": parts[2]}
             )
 
         return ret

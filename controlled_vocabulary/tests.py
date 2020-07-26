@@ -12,11 +12,15 @@ class ControlledVocTestCase(TestCase):
     '''
     @classmethod
     def setUpTestData(cls):
-        management.call_command("vocab", "init", verbosity=0)
+        # This is no longer necessary because:
+        # a) voc files are downloaded on demand
+        # b) voc records are updated each time the project starts
+        # management.call_command("vocab", "init", verbosity=0)
+        pass
 
     def test_vocab_init(self):
         '''Find built-in voc created by "vocab init"'''
-        ControlledVocabulary.objects.get(prefix="iso639-2")
+        ControlledVocabulary.objects.get(prefix="mime")
 
     def test_term_create_from_code(self):
         """Create new term & voc from code"""
