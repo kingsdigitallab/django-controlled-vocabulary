@@ -22,6 +22,31 @@ class ControlledVocTestCase(TestCase):
         '''Find built-in voc created by "vocab init"'''
         ControlledVocabulary.objects.get(prefix="mime")
 
+    def test_try_all_vocabularies(self):
+        '''Make sure all default vocabularies return something'''
+        cases = [
+            ['iso639-2', 'art'],
+            ['schema', 'Movie'],
+            ['dcmitype', 'Image'],
+            ['mime', 'jpeg'],
+            ['fast-topic', 'Politics'],
+            ['fast-forms', 'criticism'],
+            ['wikidata', 'belgium'],
+            ['viaf', 'obama'],
+        ]
+        for case in cases:
+            manager = ControlledVocabularyConfig.get_vocabulary_manager(case[0])
+            self.assertIsNotNone(
+                manager, "can't find manager for prefix '{}'".format(case[0])
+            )
+            terms = manager.search(case[1])
+            self.assertTrue(
+                len(terms) > 0,
+                "Search for '{}' in '{}' didn't return anything".format(
+                    case[1], case[0]
+                )
+            )
+
     def test_term_create_from_code(self):
         """Create new term & voc from code"""
         for i in range(2):

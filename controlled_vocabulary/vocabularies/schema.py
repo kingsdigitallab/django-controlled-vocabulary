@@ -12,9 +12,10 @@ class VocabularySchema(VocabularyBaseCSV):
     base_url = "http://schema.org/"
     concept = "wikidata:Q35120:entity"
     description = "web page topics indexable by web search engines"
-    # https://schema.org/docs/developers.html#defs
     source = {
-        "url": "https://schema.org/version/latest/schema-types.csv",
+        # see https://schema.org/docs/developers.html
+        # entities only (excludes deprecated ones)
+        "url": "https://schema.org/version/latest/schemaorg-current-https-types.csv",
     }
 
     def _get_terms_from_csv_line(self, line):
