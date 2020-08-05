@@ -25,6 +25,7 @@ class ControlledVocTestCase(TestCase):
     def test_try_all_vocabularies(self):
         '''Make sure all default vocabularies return something'''
         cases = [
+            ['iso15924', 'hiero'],
             ['iso639-2', 'art'],
             ['schema', 'Movie'],
             ['dcmitype', 'Image'],
@@ -172,3 +173,9 @@ class ControlledVocTestCase(TestCase):
 
         term = search_term_or_none(prefix, "deu")
         self.assertEqual(term.termid, "deu")
+
+    def test_iso15924(self):
+        manager = ControlledVocabularyConfig.get_vocabulary_manager('iso15924')
+
+        terms = manager.search("anatol")
+        self.assertEqual(terms[0][0], "Hluw")
