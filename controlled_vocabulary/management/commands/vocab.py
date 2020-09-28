@@ -38,6 +38,13 @@ OPTIONS:
 
 """
 
+    def create_parser(self, *args, **kwargs):
+        parser = super(Command, self).create_parser(*args, **kwargs)
+        from argparse import RawTextHelpFormatter
+        # to avoid the above help text to be displayed on a single line
+        parser.formatter_class = RawTextHelpFormatter
+        return parser
+
     def add_arguments(self, parser):
         parser.add_argument("action", nargs=1, type=str)
 
