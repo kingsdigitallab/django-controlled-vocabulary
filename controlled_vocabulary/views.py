@@ -1,8 +1,11 @@
-from django.shortcuts import render
+import urllib.parse
+
 from django.http import JsonResponse
-from .models import ControlledTerm, ControlledVocabulary
-from django.views.generic.list import ListView
 from django.http.response import Http404
+from django.shortcuts import render
+from django.views.generic.list import ListView
+
+from .models import ControlledTerm, ControlledVocabulary
 
 
 class TermListView(ListView):
@@ -64,7 +67,12 @@ class TermListView(ListView):
             "results": [
                 {
                     "id": term.pk
-                    or "{}:{}:{}".format(term.vocabulary_id, term.termid, term.label),
+                    or "{}::{}::{}::{}".format(
+                        term.vocabulary_id,
+                        term.termid,
+                        term.label,
+                        urllib.parse.quote_plus(term.description),
+                    ),
                     "termid": term.termid,
                     "text": term.label,
                     "description": term.description,

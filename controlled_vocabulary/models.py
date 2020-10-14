@@ -1,3 +1,5 @@
+import urllib.parse
+
 from django import forms
 from django.contrib.admin.widgets import AutocompleteSelect, AutocompleteSelectMultiple
 from django.db import models
@@ -44,21 +46,17 @@ class ControlledTerm(models.Model):
         """code has the following format: prefix:termid:label.
         Creates vocabulary record if needed.
         """
-        return cls._get_or_create_from_code(
-            code,
-            ControlledVocabulary,
-            ControlledTerm
-        )
+        return cls._get_or_create_from_code(code, ControlledVocabulary, ControlledTerm)
 
     @staticmethod
     def _get_or_create_from_code(code, vocabulary_model, term_model):
-        '''
+        """
         'vocabulary_model' can be either
         <class 'controlled_vocabulary.models.ControlledVocabulary'>
         or <class '__fake__.ControlledVocabulary'>
 
         same with term_model.
-        '''
+        """
         ret = None
 
         parts = code.split(":")
@@ -67,9 +65,7 @@ class ControlledTerm(models.Model):
                 prefix=parts[0].lower().strip()
             )
             ret, _ = term_model.objects.get_or_create(
-                vocabulary=voc,
-                termid=parts[1].strip(),
-                defaults={"label": parts[2]}
+                vocabulary=voc, termid=parts[1].strip(), defaults={"label": parts[2]}
             )
 
         return ret
@@ -143,7 +139,9 @@ class ControlledTermWidgetMixin:
                 # repeated to make sure it is run after ours
                 "admin/js/autocomplete.js",
             ),
-            css={"screen": ("admin/css/controlled_term_widget.css",),},
+            css={
+                "screen": ("admin/css/controlled_term_widget.css",),
+            },
         )
         return ret
 
@@ -167,16 +165,18 @@ class ControlledTermWidgetMixin:
         ret = value
 
         if ret:
-            parts = str(ret).split(":")
-            if len(parts) == 3:
-                # 10:abc:description
+            parts = str(ret).split("::")
+            if len(parts) >= 3:
+                desc = urllib.parse.unquote_plus(parts[3]) if parts[3] else None
+
+                # 10::abc::label::description
                 # where 10 is a ControlledVocabulary.id
                 # and abc is a ControlledTerm.termid
                 # We return the ControlledTerm.id
                 term, created = ControlledTerm.objects.get_or_create(
                     vocabulary_id=parts[0],
                     termid=parts[1],
-                    defaults={"label": parts[2]},
+                    defaults={"label": parts[2], "description": desc},
                 )
 
                 ret = term.id
