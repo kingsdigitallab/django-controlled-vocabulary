@@ -1,15 +1,22 @@
+from django.contrib import admin
 from django.core import management
 from django.test import TestCase
 
 from .apps import ControlledVocabularyConfig
-from .models import ControlledTerm, ControlledVocabulary
+from .models import (
+    ControlledTerm,
+    ControlledTermField,
+    ControlledVocabulary,
+    term_create_from_string,
+)
 
 
 class ControlledVocTestCase(TestCase):
-    '''
+    """
     python manage.py test controlled_vocabulary
     python manage.py test controlled_vocabulary.tests.ControlledVocTestCase.test_search_list_by_termid
-    '''
+    """
+
     @classmethod
     def setUpTestData(cls):
         # This is no longer necessary because:
@@ -23,17 +30,17 @@ class ControlledVocTestCase(TestCase):
         ControlledVocabulary.objects.get(prefix="mime")
 
     def test_try_all_vocabularies(self):
-        '''Make sure all default vocabularies return something'''
+        """Make sure all default vocabularies return something"""
         cases = [
-            ['iso15924', 'hiero'],
-            ['iso639-2', 'art'],
-            ['schema', 'Movie'],
-            ['dcmitype', 'Image'],
-            ['mime', 'jpeg'],
-            ['fast-topic', 'Politics'],
-            ['fast-forms', 'criticism'],
-            ['wikidata', 'belgium'],
-            ['viaf', 'obama'],
+            ["iso15924", "hiero"],
+            ["iso639-2", "art"],
+            ["schema", "Movie"],
+            ["dcmitype", "Image"],
+            ["mime", "jpeg"],
+            ["fast-topic", "Politics"],
+            ["fast-forms", "criticism"],
+            ["wikidata", "belgium"],
+            ["viaf", "obama"],
         ]
         for case in cases:
             manager = ControlledVocabularyConfig.get_vocabulary_manager(case[0])
@@ -45,7 +52,7 @@ class ControlledVocTestCase(TestCase):
                 len(terms) > 0,
                 "Search for '{}' in '{}' didn't return anything".format(
                     case[1], case[0]
-                )
+                ),
             )
 
     def test_term_create_from_code(self):
@@ -57,6 +64,33 @@ class ControlledVocTestCase(TestCase):
                 vocabulary__prefix="avoc", termid="123", label="My Term"
             )
 
+    def test_term_create_from_string(self):
+        v = "1"
+        term_id = "123"
+        term_label = "le label"
+        term_description = "a long description"
+
+        value = None
+        self.assertIsNone(term_create_from_string(value))
+
+        value = "{}::{}::{}".format(v, term_id, term_label)
+        term_pk = term_create_from_string(value)
+        self.assertIsNotNone(term_pk)
+        self.assertGreater(term_pk, 0)
+
+        value = "{}::{}::{}::".format(v, term_id, term_label)
+        term_pk = term_create_from_string(value)
+        self.assertIsNotNone(term_pk)
+        self.assertGreater(term_pk, 0)
+
+        value = "{}::{}::{}::{}".format(v, "le-label", term_label, term_description)
+        term_pk = term_create_from_string(value)
+        self.assertIsNotNone(term_pk)
+        self.assertGreater(term_pk, 0)
+
+        term = ControlledTerm.objects.get(pk=term_pk)
+        self.assertEqual(term_description, term.description)
+
     def test_search_lang_by_label(self):
         prefix = "iso639-2"
 
@@ -64,23 +98,23 @@ class ControlledVocTestCase(TestCase):
 
         terms = manager.search("engl")
         # expect at least 'English', 'English, Middle', 'English, Old'
-        self.assertGreater(len([t for t in terms if 'English' in t[1]]), 2)
-        self.assertEqual(terms[0][1], 'English')
+        self.assertGreater(len([t for t in terms if "English" in t[1]]), 2)
+        self.assertEqual(terms[0][1], "English")
 
         terms = manager.search("german")
         # expect at least 'English', 'English, Middle', 'English, Old'
-        self.assertGreater(len([t for t in terms if 'German' in t[1]]), 2)
-        self.assertEqual(terms[0][1], 'German')
-        self.assertEqual(terms[1][1], 'German')
+        self.assertGreater(len([t for t in terms if "German" in t[1]]), 2)
+        self.assertEqual(terms[0][1], "German")
+        self.assertEqual(terms[1][1], "German")
         self.assertNotEqual(terms[0][0], terms[1][0])
 
         terms = manager.search("german2")
         self.assertEqual(len(terms), 0)
 
     def test_search_lang_by_termid(self):
-        '''base_list.search() should lookup termid as well as label
+        """base_list.search() should lookup termid as well as label
         See gh-8
-        '''
+        """
 
         prefix = "iso639-2"
         termid = "glv"
@@ -126,7 +160,9 @@ class ControlledVocTestCase(TestCase):
             term = search_term_or_none(prefix, "q28975377", exact=True)
             self.assertEqual(pattern_exact, term.label)
 
-            self.assertNotEqual("Essay", search_term_or_none("fast-topic", "Essay").label)
+            self.assertNotEqual(
+                "Essay", search_term_or_none("fast-topic", "Essay").label
+            )
             self.assertEqual(
                 "Essay", search_term_or_none("fast-topic", "Essay", exact=True).label
             )
@@ -167,7 +203,6 @@ class ControlledVocTestCase(TestCase):
 
         term = search_term_or_none(prefix, "fre")
         self.assertEqual(term.termid, "fre")
-
         term = search_term_or_none(prefix, "german")
         self.assertEqual(term.termid, "ger")
 
@@ -175,7 +210,7 @@ class ControlledVocTestCase(TestCase):
         self.assertEqual(term.termid, "deu")
 
     def test_iso15924(self):
-        manager = ControlledVocabularyConfig.get_vocabulary_manager('iso15924')
+        manager = ControlledVocabularyConfig.get_vocabulary_manager("iso15924")
 
         terms = manager.search("anatol")
         self.assertEqual(terms[0][0], "Hluw")
