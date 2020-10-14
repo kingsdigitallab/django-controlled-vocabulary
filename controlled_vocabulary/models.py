@@ -162,26 +162,31 @@ class ControlledTermWidgetMixin:
         return self._value_from_datadict_single(value)
 
     def _value_from_datadict_single(self, value):
-        ret = value
+        return term_create_from_string(value)
 
-        if ret:
-            parts = str(ret).split("::")
-            if len(parts) >= 3:
-                desc = urllib.parse.unquote_plus(parts[3]) if parts[3] else None
 
-                # 10::abc::label::description
-                # where 10 is a ControlledVocabulary.id
-                # and abc is a ControlledTerm.termid
-                # We return the ControlledTerm.id
-                term, created = ControlledTerm.objects.get_or_create(
-                    vocabulary_id=parts[0],
-                    termid=parts[1],
-                    defaults={"label": parts[2], "description": desc},
-                )
+def term_create_from_string(value):
+    """Get or create a term from a string value. The string must follow the format:
+    vocabulary_id::term_id::term_label::term_description. The term_description is
+    optional."""
+    if not value:
+        return None
 
-                ret = term.id
+    parts = str(value).split("::")
+    if len(parts) < 3:
+        return value
 
-        return ret
+    desc = None
+    if len(parts) == 4:
+        desc = urllib.parse.unquote_plus(parts[3])
+
+    term, created = ControlledTerm.objects.get_or_create(
+        vocabulary_id=parts[0],
+        termid=parts[1],
+        defaults={"label": parts[2], "description": desc},
+    )
+
+    return term.id
 
 
 class ControlledTermWidget(ControlledTermWidgetMixin, AutocompleteSelect):
