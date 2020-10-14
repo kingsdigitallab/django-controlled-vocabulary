@@ -53,13 +53,16 @@ Built-in plugins for the following authority files:
   * prefix: the vocabulary standard prefix, see http://prefix.cc/wikidata
   * label: the short name of the vocabulary
   * base_url: the url used as a base for all terms in the vocabulary
-  * concept: the type of terms this vocabulary contains
+  * concept: the type of terms this vocabulary represents (e.g. language, people)
   * description: a longer description
 
 * **ControlledTerm**
-  * termid: a unique code for the term within a vocabulary
-  * label: standard name for the term
-  * vocabulary: the vocabulary this term belongs to
+  * termid: a unique code for the term within a vocabulary, it is case sensitive
+  * label: standard name for the term, as provided by the authority
+  * vocabulary: a reference to the ControlledVocabulary this term belongs to
+  
+Conventions: 
+  * joining base_url (e.g. http://schema.org) with termid (e.g. Movie) **must** give the exact standard/canonical URI for the term, e.g.  http://schema.org/Movie
 
 ## Vocabulary plug-ins / managers
 

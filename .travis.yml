@@ -5,14 +5,13 @@ language: python
 matrix:
   include:
     - python: 3.5
-      env: TOX_ENV=py35
-    - python: 3.6
-      env: TOX_ENV=py36
+      env: TOX_ENV=py35-django2
+    - python: 3.8
+      env: TOX_ENV=py38-django3
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+# command to install dependencies
 install:
   - pip install pip -U
-  - pip install poetry
   - pip install tox
 
 # command to run tests using coverage, e.g. python setup.py test

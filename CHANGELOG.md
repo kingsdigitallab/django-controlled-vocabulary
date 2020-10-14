@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.1 (27-07-2020)
+
+* [Fix #11](https://github.com/kingsdigitallab/django-controlled-vocabulary/issues/11): 
+download of the CSV from schema.org was failing because they moved the file to
+another URL.
+
 ## 0.8 (26-07-2020)
 
 * Tried to reduce the need for running `vocab init`:
