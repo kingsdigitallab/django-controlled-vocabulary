@@ -68,7 +68,10 @@ OPTIONS:
         action_method = getattr(self, "action_" + action, None)
         if action_method:
             show_help = False
-            action_method()
+            res = action_method()
+            if res not in [None, True]:
+                import sys
+                sys.exit(1)
 
         if show_help:
             self.stdout.write(self.help)
@@ -107,13 +110,18 @@ OPTIONS:
     def action_update(self):
         vocs = self.app.write_vocabulary_records_from_managers()
         if self.options["verbosity"] > 0:
-            for voc in vocs.values():
-                self.stdout.write(voc.__module__)
+            if vocs:
+                for voc in vocs.values():
+                    self.stdout.write(voc.__module__)
+            else:
+                self.stdout.write('Please run django migrate.')
 
     def action_refetch(self):
-        self.action_fetch(True)
+        return self.action_fetch(True)
 
     def action_fetch(self, overwrite=False):
+        ret = True
+
         for voc in self._get_vocabularies():
             download_method = getattr(voc, "download", None)
             if download_method:
@@ -121,11 +129,18 @@ OPTIONS:
                     self.stdout.write(voc.prefix)
                 url, filepath, size, downloaded = download_method(overwrite=overwrite)
                 if self.options["verbosity"] > 0:
-                    self.stdout.write(
-                        "\t{}\n\t{}\n\t{:.3f}MB".format(
-                            url, filepath, size / 1024 / 1024
+                    if size > 0:
+                        self.stdout.write(
+                            "\t{}\n\t{}\n\t{:.3f}MB".format(
+                                url, filepath, size / 1024 / 1024
+                            )
                         )
-                    )
+                    else:
+                        self.stdout.write(f"ERROR: vocabulary download failed {url}.")
+                if size < 1:
+                    ret = False
+
+        return ret
 
     def action_init(self):
         self.action_update()

@@ -12,8 +12,7 @@ class VocabularyISO15924(VocabularyBaseCSV):
     concept = "wikidata:Q8192:writing system"
     description = "Codes for the Representation of names of scripts"
     source = {
-        "url": "https://www.unicode.org/iso15924/iso15924.txt.zip",
-        "extract": "iso15924-utf8-*.txt",
+        "url": "https://www.unicode.org/iso15924/iso15924.txt",
         "processed": "iso15924-utf8.txt",
         'delimiter': ';',
     }
