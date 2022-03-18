@@ -1,5 +1,6 @@
-from .base_http import VocabularyHTTP
 import re
+
+from .base_http import VocabularyHTTP
 
 
 class VocabularyFastTopic(VocabularyHTTP):
@@ -12,7 +13,7 @@ class VocabularyFastTopic(VocabularyHTTP):
     description = "Topic list from the Faceted Application of Subject Terminology"
     source = {
         # 'url': 'http://fast.oclc.org/searchfast/fastsuggest?query={query}&fl=suggest50&rows=10',
-        "url": "https://fast.oclc.org/searchfast/fastsuggest?&query={pattern}&queryIndex=suggest50&queryReturn=suggest50,id&sort=usage desc&suggest=fastSuggest",
+        "url": "https://fast.oclc.org/searchfast/fastsuggest?&query={pattern}&queryIndex=suggest50&queryReturn=suggest50,id&sort=usage desc&suggest=fastSuggest&rows=20",
         # https://www.oclc.org/research/themes/data-science/fast/download.html
         # 'url': 'https://researchworks.oclc.org/researchdata/fast/FASTTopical.nt.zip',
     }
@@ -30,5 +31,4 @@ class VocabularyFastTopic(VocabularyHTTP):
 
         for doc in res["response"]["docs"]:
             ret.append([self._get_clean_id(doc["id"]), doc["suggest50"]])
-
         return ret
